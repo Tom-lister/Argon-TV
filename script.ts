@@ -1,39 +1,11 @@
-import { createSchedule } from "./schedule.js";
-import { VideoType } from "./videos.js";
+import { createSchedule, displaySchedule } from "./schedule.js";
+import { VideoGenre } from "./videos.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
 let currentTime = Date.now();
 
-const formatTime = (utcMs: number): string => {
-  const d = new Date(utcMs);
-  const month = d.getMonth() + 1;
-  const day = d.getDate();
-  const year = d.getFullYear();
-  const hours = d.getHours().toString().padStart(2, "0");
-  const minutes = d.getMinutes().toString().padStart(2, "0");
-  return `${month}/${day}/${year} ${hours}:${minutes}`;
-};
-
 const schedule = createSchedule(currentTime);
-
-console.log(
-  schedule.map((scheduleItem) => {
-    if ("id" in scheduleItem) {
-      return {
-        ...scheduleItem,
-        startTime: formatTime(scheduleItem.startTime),
-      };
-    }
-    return {
-      ...scheduleItem,
-      videos: scheduleItem.videos.map((video) => ({
-        ...video,
-        startTime: formatTime(video.startTime),
-      })),
-    };
-  }),
-);
 
 const flattenedSchedule = schedule.flatMap((item) => {
   if ("id" in item) {
@@ -49,6 +21,8 @@ while (currentTime > flattenedSchedule[currentVideoIndex + 1].startTime) {
 
 const firstVideoStartTime =
   currentTime - flattenedSchedule[currentVideoIndex].startTime;
+
+displaySchedule(schedule);
 
 /////////////////////////////// VIDEO PLAYER ///////////////////////////////
 

@@ -2,16 +2,66 @@ body {
   background-color: #000000;
 }
 
-.video-container {
+#schedule-container {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  width: 35%;
+  padding: 0;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+td {
+  padding-left: 6px;
+  vertical-align: text-top;
+  margin: 0;
+  color: #ffffff;
+  font-family:
+    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
+}
+
+.large-video td {
+  font-size: 20px;
+  color: #0bcc71;
+}
+
+.trailer td {
+  color: #e43db7;
+}
+
+.marathon-box {
+  border: 1px solid #0bcc71;
+  padding: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  width: fit-content;
+  max-width: 100%;
+  display: inline-block;
+  overflow-x: auto;
+}
+
+.marathon-box p {
+  margin: 0;
+  font-size: 20px;
+}
+
+#video-container {
   height: 70vh;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   position: relative;
   margin: 0 auto;
 }
-.video-container #yt-player,
-.video-container #yt-player iframe,
-.video-container iframe {
+
+#video-container #yt-player,
+#video-container #yt-player iframe,
+#video-container iframe {
   pointer-events: none;
   position: absolute;
   top: -60px;
@@ -19,7 +69,7 @@ body {
   width: 100%;
   height: calc(100% + 120px);
 }
-.video-foreground {
+#video-foreground {
   pointer-events: none;
 }
 .unmute-btn {
