@@ -1,0 +1,29 @@
+.video-container {
+  height: 80vh;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+.video-container #yt-player,
+.video-container #yt-player iframe,
+.video-container iframe {
+  pointer-events: none;
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 120px);
+}
+.video-foreground {
+  pointer-events: none;
+}
+.unmute-btn {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 2;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  pointer-events: auto;
+}

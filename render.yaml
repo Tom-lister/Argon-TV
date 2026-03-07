@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: argon-tv
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
