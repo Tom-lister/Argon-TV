@@ -5,6 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "random-seedable": "https://esm.sh/random-seedable@1"
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="video-container">
@@ -21,6 +28,6 @@
       </button>
     </div>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="player.js"></script>
+    <script src="script.js" type="module"></script>
   </body>
 </html>
