@@ -2,5 +2,5 @@ services:
   - type: web
     name: argon-tv
     env: node
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
