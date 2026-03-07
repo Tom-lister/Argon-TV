@@ -1,4 +1,4 @@
-import { Video, VideoGroup, VIDEOS, VideoTag, VideoGenre } from "./videos.js";
+import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./videos.js";
 import { XORShift } from "random-seedable";
 
 type ScheduleVideo = Video & {
@@ -27,6 +27,19 @@ const formatTime = (utcMs: number): string => {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 };
+
+export const flattenSchedule = (schedule: ScheduleItem[]): ScheduleVideo[] =>
+  schedule.flatMap((item) => {
+    if ("id" in item) {
+      return [item];
+    }
+    return item.videos;
+  });
+
+const weightVideosByRecency = (
+  random: XORShift,
+  videos: ScheduleItem[],
+): Video[] => {};
 
 const createMarathon = (
   videos: ScheduleVideo[],
@@ -66,23 +79,36 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
       const largeItemType = random.choice([
         "tagMarathon",
         "groupMarathon",
-        //"castMarathon",
+        "castMarathon",
+        "longVideo",
         "longVideo",
       ]);
 
       switch (largeItemType) {
+        case "castMarathon":
+          const randomCast = random.choice(Object.values(Cast));
+          const videosWithCast = VIDEOS.filter((video) =>
+            video.cast?.includes(randomCast),
+          );
+          random.shuffle(videosWithCast);
+          const randomCastVideos = videosWithCast.slice(0, 4);
+          const castMarathonVideos = randomCastVideos.map(
+            formatVideoForSchedule,
+          );
+          schedule.push(createMarathon(castMarathonVideos, randomCast));
+          break;
         case "tagMarathon":
-          const randomTag = random.choice(Object.values(VideoTag));
+          const randomTag = random.choice(Object.values(Tag));
           const videosWithTag = VIDEOS.filter((video) =>
             video.tags?.includes(randomTag),
           );
           random.shuffle(videosWithTag);
-          const randomVideos = videosWithTag.slice(0, 4);
-          const tagMarathonVideos = randomVideos.map(formatVideoForSchedule);
+          const randomTagVideos = videosWithTag.slice(0, 4);
+          const tagMarathonVideos = randomTagVideos.map(formatVideoForSchedule);
           schedule.push(createMarathon(tagMarathonVideos, randomTag));
           break;
         case "groupMarathon":
-          const randomGroup = random.choice(Object.values(VideoGroup));
+          const randomGroup = random.choice(Object.values(Group));
           const videosWithGroup = VIDEOS.filter(
             (video) => video.group === randomGroup,
           );
@@ -104,7 +130,7 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
       largeItemProbabilityIndex++;
 
       const filteredVideos = VIDEOS.filter(
-        (video) => video.genre !== VideoGenre.Update && video.length < 60 * 30,
+        (video) => video.genre !== Genre.Update && video.length < 60 * 30,
       );
 
       const randomVideo = random.choice(filteredVideos);
@@ -129,11 +155,8 @@ export const displaySchedule = (schedule: ScheduleItem[]) => {
       titleCell.textContent = item.title;
       row.appendChild(titleCell);
 
-      if (item.genre === VideoGenre.Special || item.length >= 60 * 30) {
+      if (item.genre === Genre.Special || item.length >= 60 * 30) {
         row.classList.add("large-video");
-      }
-      if (item.genre === VideoGenre.Trailer) {
-        row.classList.add("trailer");
       }
     } else {
       const marathonCell = document.createElement("td");

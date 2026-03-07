@@ -1,5 +1,9 @@
-import { createSchedule, displaySchedule } from "./schedule.js";
-import { VideoGenre } from "./videos.js";
+import {
+  createSchedule,
+  displaySchedule,
+  flattenSchedule,
+} from "./schedule.js";
+import { Genre } from "./videos.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
@@ -7,12 +11,7 @@ let currentTime = Date.now();
 
 const schedule = createSchedule(currentTime);
 
-const flattenedSchedule = schedule.flatMap((item) => {
-  if ("id" in item) {
-    return [item];
-  }
-  return item.videos;
-});
+const flattenedSchedule = flattenSchedule(schedule);
 
 let currentVideoIndex = 0;
 while (currentTime > flattenedSchedule[currentVideoIndex + 1].startTime) {
