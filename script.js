@@ -1,18 +1,8 @@
-import { XORShift } from "random-seedable";
-import { VIDEOS } from "./videos.js";
+import { createSchedule } from "./schedule.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
-const random = new XORShift(123456789);
-
-// 6:30pm, March 7th, 2026 (GMT)
-const START_TIME = 1772908200000;
-// 1 hour
-const SCHEDULE_LENGTH = 1000 * 60 * 60;
-
-const SCHEDULE = [];
 let currentTime = Date.now();
-let timeUntilScheduleEnds = START_TIME - currentTime;
 
 const formatTime = (utcMs) => {
   const d = new Date(utcMs);
@@ -24,15 +14,7 @@ const formatTime = (utcMs) => {
   return `${month}/${day}/${year} ${hours}:${minutes}`;
 };
 
-while (timeUntilScheduleEnds < SCHEDULE_LENGTH) {
-  const randomIndex = Math.floor(random.randRange(0, VIDEOS.length - 1));
-  const video = VIDEOS[randomIndex];
-  SCHEDULE.push({
-    ...video,
-    startTime: currentTime + timeUntilScheduleEnds,
-  });
-  timeUntilScheduleEnds += video.length * 1000;
-}
+const SCHEDULE = createSchedule(currentTime);
 
 console.log(
   SCHEDULE.map((video) => ({
