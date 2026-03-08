@@ -983,7 +983,7 @@ export const VIDEOS: Video[] = [
   {
     id: "lXIacRj9ssw",
     title: "A video which is exactly two minutes long",
-    length: 1000,
+    length: 167,
     genre: Genre.Video,
     tags: [Tag.BFI],
     cast: [Cast.Johnson],
