@@ -55,7 +55,7 @@ const getAdvertData = (upcomingVideos: ScheduleVideo[]) => {
   };
 };
 
-const prepareAdvert = (videoProgress: number = 0) => {
+const prepareAdverts = (videoProgress: number = 0) => {
   const video = flattenedSchedule[currentVideoIndex];
 
   const upcomingVideos: ScheduleVideo[] = [];
@@ -70,7 +70,7 @@ const prepareAdvert = (videoProgress: number = 0) => {
   if (
     upcomingVideos.length > 0 &&
     video.genre !== Genre.Trailer &&
-    timeLeftInVideo >= 60
+    timeLeftInVideo >= 45
   ) {
     if (timeLeftInVideo >= LONG_VIDEO_TIME) {
       const advertProps1 = getAdvertData(upcomingVideos);
@@ -87,8 +87,6 @@ const prepareAdvert = (videoProgress: number = 0) => {
       const maxAdvertWait2 = timeLeftInVideo - 20;
       const advertWait2 =
         minAdvertWait2 + Math.random() * (maxAdvertWait2 - minAdvertWait2);
-
-      console.log(advertWait1, advertWait2);
 
       setTimeout(() => showAdvert(advertProps1), advertWait1 * 1000);
       setTimeout(() => showAdvert(advertProps2), advertWait2 * 1000);
@@ -120,9 +118,11 @@ const showAdvert = ({ header, title, time }: AdvertData) => {
 
   const advertText = document.createElement("p");
   advertText.classList.add("advert-text");
-  advertText.innerHTML = `
-    <span class="advert-time">${time}</span> ${title}
-  `;
+  const timeSpan = document.createElement("span");
+  timeSpan.className = "advert-time";
+  timeSpan.textContent = time;
+  advertText.appendChild(timeSpan);
+  advertText.appendChild(document.createTextNode(` ${title}`));
   advertBody.appendChild(advertText);
 
   advert.appendChild(advertBody);
@@ -174,7 +174,7 @@ function nextVideo(): void {
     player.unMute();
     currentVideoTitle.textContent = video.title;
 
-    prepareAdvert();
+    prepareAdverts();
   }
 }
 
@@ -224,7 +224,7 @@ function initPlayer(): void {
     },
   });
   currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
-  prepareAdvert(videoProgress);
+  prepareAdverts(videoProgress);
 }
 
 function onYouTubeIframeAPIReady(): void {
