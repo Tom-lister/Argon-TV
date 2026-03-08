@@ -70,6 +70,18 @@ const getWeightedAttributeArray = <T>(
   return weightedAttributeArray;
 };
 
+const chooseMultiple = (videos: Video[], random: XORShift): Video[] => {
+  const shuffledVideos = random.shuffle(videos);
+  const returnVideos: Video[] = [];
+  while (returnVideos.length < 4 && shuffledVideos.length > 0) {
+    const randomVideo = shuffledVideos.pop();
+    if (!returnVideos.some((video) => video.id === randomVideo.id)) {
+      returnVideos.push(randomVideo);
+    }
+  }
+  return returnVideos;
+};
+
 const createMarathon = (
   videos: ScheduleVideo[],
   attribute: Group | Tag | Cast,
@@ -124,8 +136,11 @@ export const createSchedule = (startTime: number): ScheduleItem[] => {
           const videosWithCast = VIDEOS.filter((video) =>
             video.cast?.includes(randomCast),
           );
-          random.shuffle(videosWithCast);
-          const randomCastVideos = videosWithCast.slice(0, 4);
+          const weightedCastVideos = getWeightedVideoArray(
+            videosWithCast,
+            schedule,
+          );
+          const randomCastVideos = chooseMultiple(weightedCastVideos, random);
           const castMarathonVideos = randomCastVideos.map(
             formatVideoForSchedule,
           );
@@ -140,8 +155,11 @@ export const createSchedule = (startTime: number): ScheduleItem[] => {
           const videosWithTag = VIDEOS.filter((video) =>
             video.tags?.includes(randomTag),
           );
-          random.shuffle(videosWithTag);
-          const randomTagVideos = videosWithTag.slice(0, 4);
+          const weightedTagVideos = getWeightedVideoArray(
+            videosWithTag,
+            schedule,
+          );
+          const randomTagVideos = chooseMultiple(weightedTagVideos, random);
           const tagMarathonVideos = randomTagVideos.map(formatVideoForSchedule);
           schedule.push(createMarathon(tagMarathonVideos, randomTag));
           break;

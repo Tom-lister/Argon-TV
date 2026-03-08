@@ -4,4 +4,4 @@ export const SCHEDULE_START_TIME = 1772956800000;
 export const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24 * 2;
 
 export const LARGE_ITEM_PROBABILITIES = [0, 0.1, 0.25, 0.45, 0.7, 1];
-export const LONG_VIDEO_TIME = 60 * 26;
+export const LONG_VIDEO_TIME = 60 * 20;
