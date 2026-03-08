@@ -104,22 +104,22 @@ const prepareAdverts = (videoProgress: number = 0) => {
 };
 
 const showAdvert = ({ header, title, time }: AdvertData) => {
-  const advertContainer = document.getElementById("advert-container")!;
-  const advert = document.createElement("div");
-  advert.id = "advert";
+  const advertContainer = document.getElementById("banner-container")!;
+  const banner = document.createElement("div");
+  banner.id = "banner";
 
   const advertBody = document.createElement("div");
-  advertBody.id = "advert-body";
+  advertBody.id = "banner-body";
 
   const advertHeader = document.createElement("p");
-  advertHeader.classList.add("advert-header");
+  advertHeader.classList.add("banner-header");
   advertHeader.textContent = header;
   advertBody.appendChild(advertHeader);
 
   const advertText = document.createElement("p");
-  advertText.classList.add("advert-text");
+  advertText.classList.add("banner-text");
   const timeSpan = document.createElement("span");
-  timeSpan.className = "advert-time";
+  timeSpan.className = "banner-time";
   timeSpan.textContent = time;
   advertText.appendChild(timeSpan);
   advertText.appendChild(document.createTextNode(` ${title}`));
@@ -128,20 +128,20 @@ const showAdvert = ({ header, title, time }: AdvertData) => {
   }
   advertBody.appendChild(advertText);
 
-  advert.appendChild(advertBody);
+  banner.appendChild(advertBody);
 
   for (let i = 0; i < 3; i++) {
     const advertDiv = document.createElement("div");
-    advert.appendChild(advertDiv);
+    banner.appendChild(advertDiv);
   }
 
-  advertContainer.appendChild(advert);
+  advertContainer.appendChild(banner);
 
   // Start animation
-  void advert.offsetHeight;
+  void banner.offsetHeight;
 
-  advert.style.opacity = "1";
-  advert.style.marginBottom = "2%";
+  banner.style.opacity = "1";
+  banner.style.marginBottom = "2%";
   advertBody.style.flex = "10";
   advertBody.style.paddingLeft = "24px";
   advertBody.style.opacity = "1";
@@ -150,15 +150,15 @@ const showAdvert = ({ header, title, time }: AdvertData) => {
 };
 
 const hideAdvert = () => {
-  const advert = document.getElementById("advert")!;
-  advert.style.opacity = "0";
-  advert.style.marginBottom = "0%";
+  const banner = document.getElementById("banner")!;
+  banner.style.opacity = "0";
+  banner.style.marginBottom = "0%";
   setTimeout(deleteAdvert, 1000);
 };
 
 const deleteAdvert = () => {
-  const advert = document.getElementById("advert")!;
-  advert.remove();
+  const banner = document.getElementById("banner")!;
+  banner.remove();
 };
 
 /////////////////////////////// VIDEO PLAYER ///////////////////////////////
