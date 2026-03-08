@@ -1,10 +1,12 @@
+import { LONG_VIDEO_TIME } from "./constants.js";
 import {
   createSchedule,
   displaySchedule,
   flattenSchedule,
+  ScheduleVideo,
 } from "./schedule.js";
-import { formatTime, getEightAmDate } from "./utils.js";
-import { Genre } from "./videos.js";
+import { formatTime, getEightAmDate, isFirstForDay } from "./utils.js";
+import { Genre, Video } from "./videos.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
@@ -26,28 +28,84 @@ displaySchedule(schedule);
 
 /////////////////////////////// ADVERT ///////////////////////////////
 
+type AdvertData = {
+  header: string;
+  title: string;
+  time: string;
+};
+
+const getAdvertData = (upcomingVideos: ScheduleVideo[]) => {
+  const nextVideo = upcomingVideos[0];
+  const nonImmediateVideos = upcomingVideos.slice(1);
+
+  const promoteSpecial =
+    nonImmediateVideos.some((video) => video.genre === Genre.Special) &&
+    Math.random() < 0.5;
+
+  const videoToUse = promoteSpecial
+    ? nonImmediateVideos.find((video) => video.genre === Genre.Special)!
+    : nextVideo;
+
+  const advertHeader = promoteSpecial ? "DON'T MISS" : "UP NEXT";
+
+  return {
+    header: advertHeader,
+    title: videoToUse.title,
+    time: formatTime(videoToUse.startTime),
+  };
+};
+
 const prepareAdvert = (videoProgress: number = 0) => {
   const video = flattenedSchedule[currentVideoIndex];
 
+  const upcomingVideos: ScheduleVideo[] = [];
+  for (let i = 1; i <= 4; i++) {
+    const upcomingVideo = flattenedSchedule[currentVideoIndex + i];
+    if (isFirstForDay(upcomingVideo)) break;
+    upcomingVideos.push(upcomingVideo);
+  }
+
   const timeLeftInVideo = video.length - videoProgress;
 
-  if (video.genre !== Genre.Trailer && timeLeftInVideo >= 60) {
-    const nextVideo = flattenedSchedule[currentVideoIndex + 1];
+  if (
+    upcomingVideos.length > 0 &&
+    video.genre !== Genre.Trailer &&
+    timeLeftInVideo >= 60
+  ) {
+    if (timeLeftInVideo >= LONG_VIDEO_TIME) {
+      const advertProps1 = getAdvertData(upcomingVideos);
+      const advertProps2 = getAdvertData(upcomingVideos);
 
-    const minAdvertTime = 20;
-    const maxAdvertTime = timeLeftInVideo - minAdvertTime;
-    const advertTime =
-      minAdvertTime + Math.random() * (maxAdvertTime - minAdvertTime);
+      const halfwayThroughVideo = timeLeftInVideo / 2;
 
-    console.log(advertTime);
+      const minAdvertWait1 = 20;
+      const maxAdvertWait1 = halfwayThroughVideo - 20;
+      const advertWait1 =
+        minAdvertWait1 + Math.random() * (maxAdvertWait1 - minAdvertWait1);
 
-    setTimeout(() => {
-      showAdvert("UP NEXT", nextVideo.title, formatTime(nextVideo.startTime));
-    }, advertTime * 1000);
+      const minAdvertWait2 = halfwayThroughVideo + 20;
+      const maxAdvertWait2 = timeLeftInVideo - 20;
+      const advertWait2 =
+        minAdvertWait2 + Math.random() * (maxAdvertWait2 - minAdvertWait2);
+
+      console.log(advertWait1, advertWait2);
+
+      setTimeout(() => showAdvert(advertProps1), advertWait1 * 1000);
+      setTimeout(() => showAdvert(advertProps2), advertWait2 * 1000);
+    } else {
+      const advertProps = getAdvertData(upcomingVideos);
+
+      const minAdvertWait = 20;
+      const maxAdvertWait = timeLeftInVideo - 20;
+      const advertWait =
+        minAdvertWait + Math.random() * (maxAdvertWait - minAdvertWait);
+
+      setTimeout(() => showAdvert(advertProps), advertWait * 1000);
+    }
   }
 };
 
-const showAdvert = (header: string, title: string, time: string) => {
+const showAdvert = ({ header, title, time }: AdvertData) => {
   const advertContainer = document.getElementById("advert-container")!;
   const advert = document.createElement("div");
   advert.id = "advert";

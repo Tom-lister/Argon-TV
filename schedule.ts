@@ -1,3 +1,9 @@
+import {
+  LARGE_ITEM_PROBABILITIES,
+  LONG_VIDEO_TIME,
+  SCHEDULE_LENGTH,
+  SCHEDULE_START_TIME,
+} from "./constants.js";
 import { formatTime, getEightAmDate } from "./utils.js";
 import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./videos.js";
 import { XORShift } from "random-seedable";
@@ -15,14 +21,6 @@ type ScheduleMarathon = {
 };
 
 type ScheduleItem = ScheduleVideo | ScheduleMarathon;
-
-// 8am, March 8th, 2026 (GMT)
-const SCHEDULE_START_TIME = 1772956800000;
-// 2 days
-const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24 * 2;
-
-const LARGE_ITEM_PROBABILITIES = [0, 0.1, 0.25, 0.45, 0.7, 1];
-const LONG_VIDEO_TIME = 60 * 26;
 
 export const flattenSchedule = (schedule: ScheduleItem[]): ScheduleVideo[] =>
   schedule.flatMap((item) => {
