@@ -45,10 +45,8 @@ export enum Cast {
   Riley = "Riley",
   Jake = "Jake",
   Duja = "Duja",
-  Jacob = "Jacob", // ONLY IN ONE VID???
   Abdi = "Abdi",
   Jaskirat = "Jaskirat",
-  Riz = "Riz", // ONLY IN TWO VIDS???
   Blaise = "Blaise",
   Angus = "Angus",
   Johnson = "Johnson",
@@ -238,7 +236,6 @@ export const VIDEOS: Video[] = [
     length: 156,
     genre: Genre.Video,
     tags: [Tag.MadDG],
-    cast: [Cast.Riz],
     channel: Channel.ArgonFilms,
   },
   {
@@ -280,7 +277,6 @@ export const VIDEOS: Video[] = [
     title: "You should jump",
     length: 165,
     genre: Genre.Video,
-    cast: [Cast.Jacob],
     channel: Channel.ArgonFilms,
   },
   {

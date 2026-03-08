@@ -14,19 +14,27 @@
     </script>
   </head>
   <body>
-    <div id="video-container">
-      <div id="video-foreground">
-        <div id="yt-player"></div>
+    <div id="above-schedule">
+      <img src="logo.png" alt="Argon Logo" id="argon-logo" />
+      <div id="video-container">
+        <div id="video-foreground">
+          <div id="yt-player"></div>
+        </div>
+        <button
+          type="button"
+          class="unmute-btn"
+          id="unmute-btn"
+          aria-label="Unmute"
+        >
+          Unmute
+        </button>
       </div>
-      <button
-        type="button"
-        class="unmute-btn"
-        id="unmute-btn"
-        aria-label="Unmute"
-      >
-        Unmute
-      </button>
+      <p id="video-footer">
+        Currently playing: <span id="current-video-title"></span>
+      </p>
     </div>
+    <p id="schedule-indicator">Schedule</p>
+    <img src="down-arrow.png" alt="Arrow Down" id="down-arrow" />
     <div id="schedule-container"></div>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js" type="module"></script>

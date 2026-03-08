@@ -9,17 +9,19 @@ type ScheduleVideo = Video & {
 type ScheduleMarathon = {
   type: "marathon";
   title: string;
+  attribute: Group | Tag | Cast;
   videos: ScheduleVideo[];
 };
 
 type ScheduleItem = ScheduleVideo | ScheduleMarathon;
 
-// 8:30pm, March 7th, 2026 (GMT)
-const START_TIME = 1772922600000;
+// Midnight, March 8th, 2026 (GMT)
+const START_TIME = 1772928000000;
 // 6 hours
-const SCHEDULE_LENGTH = 1000 * 60 * 60 * 6;
+const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24;
 
 const LARGE_ITEM_PROBABILITIES = [0, 0.1, 0.25, 0.45, 0.7, 1];
+const LONG_VIDEO_TIME = 60 * 26;
 
 const formatTime = (utcMs: number): string => {
   const date = new Date(utcMs);
@@ -36,20 +38,58 @@ export const flattenSchedule = (schedule: ScheduleItem[]): ScheduleVideo[] =>
     return item.videos;
   });
 
-const weightVideosByRecency = (
-  random: XORShift,
-  videos: ScheduleItem[],
-): Video[] => {};
+const getWeightedVideoArray = (
+  videos: Video[],
+  schedule: ScheduleItem[],
+): Video[] => {
+  const flattenedSchedule = flattenSchedule(schedule);
+  flattenedSchedule.reverse();
+
+  const weightedVideoArray: Video[] = [];
+  for (const video of videos) {
+    const mostRecentIndex = flattenedSchedule.findIndex(
+      (item) => item.id === video.id,
+    );
+    const videoFrequency =
+      mostRecentIndex >= 0 ? mostRecentIndex : flattenedSchedule.length || 1;
+    weightedVideoArray.push(...Array(videoFrequency).fill(video));
+  }
+
+  return weightedVideoArray;
+};
+
+const getWeightedAttributeArray = <T>(
+  attributes: T[],
+  schedule: ScheduleItem[],
+): T[] => {
+  const reversedSchedule = schedule.filter((item) => item.type === "marathon");
+  reversedSchedule.reverse();
+
+  const weightedAttributeArray: T[] = [];
+  for (const attribute of attributes) {
+    const mostRecentIndex = reversedSchedule.findIndex(
+      (item) => item.attribute === attribute,
+    );
+    const attributeFrequency =
+      mostRecentIndex >= 0 ? mostRecentIndex : reversedSchedule.length || 1;
+    weightedAttributeArray.push(...Array(attributeFrequency).fill(attribute));
+  }
+
+  return weightedAttributeArray;
+};
 
 const createMarathon = (
   videos: ScheduleVideo[],
-  title: string,
+  attribute: Group | Tag | Cast,
 ): ScheduleMarathon => ({
   type: "marathon",
-  title: videos.length == 2 ? `${title}: Back to Back` : `${title} Marathon`,
+  title:
+    videos.length == 2 ? `${attribute}: Back to Back` : `${attribute} Marathon`,
+  attribute,
   videos,
 });
 
+// TODO - pause at midnight, resume at 8am
 export const createSchedule = (currentTime: number): ScheduleItem[] => {
   const random = new XORShift(123456789);
 
@@ -86,7 +126,11 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
 
       switch (largeItemType) {
         case "castMarathon":
-          const randomCast = random.choice(Object.values(Cast));
+          const weightedCasts = getWeightedAttributeArray(
+            Object.values(Cast),
+            schedule,
+          );
+          const randomCast = random.choice(weightedCasts);
           const videosWithCast = VIDEOS.filter((video) =>
             video.cast?.includes(randomCast),
           );
@@ -98,7 +142,11 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
           schedule.push(createMarathon(castMarathonVideos, randomCast));
           break;
         case "tagMarathon":
-          const randomTag = random.choice(Object.values(Tag));
+          const weightedTags = getWeightedAttributeArray(
+            Object.values(Tag),
+            schedule,
+          );
+          const randomTag = random.choice(weightedTags);
           const videosWithTag = VIDEOS.filter((video) =>
             video.tags?.includes(randomTag),
           );
@@ -108,7 +156,11 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
           schedule.push(createMarathon(tagMarathonVideos, randomTag));
           break;
         case "groupMarathon":
-          const randomGroup = random.choice(Object.values(Group));
+          const weightedGroups = getWeightedAttributeArray(
+            Object.values(Group),
+            schedule,
+          );
+          const randomGroup = random.choice(weightedGroups);
           const videosWithGroup = VIDEOS.filter(
             (video) => video.group === randomGroup,
           );
@@ -119,8 +171,14 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
           schedule.push(createMarathon(groupMarathonVideos, randomGroup));
           break;
         case "longVideo":
-          const longVideos = VIDEOS.filter((video) => video.length >= 60 * 30);
-          const randomLongVideo = random.choice(longVideos);
+          const longVideos = VIDEOS.filter(
+            (video) => video.length >= LONG_VIDEO_TIME,
+          );
+          const weightedLongVideos = getWeightedVideoArray(
+            longVideos,
+            schedule,
+          );
+          const randomLongVideo = random.choice(weightedLongVideos);
           schedule.push(formatVideoForSchedule(randomLongVideo));
           break;
       }
@@ -130,10 +188,13 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
       largeItemProbabilityIndex++;
 
       const filteredVideos = VIDEOS.filter(
-        (video) => video.genre !== Genre.Update && video.length < 60 * 30,
+        (video) =>
+          video.genre !== Genre.Update && video.length < LONG_VIDEO_TIME,
       );
 
-      const randomVideo = random.choice(filteredVideos);
+      const weightedVideos = getWeightedVideoArray(filteredVideos, schedule);
+
+      const randomVideo = random.choice(weightedVideos);
       schedule.push(formatVideoForSchedule(randomVideo));
     }
   }
@@ -141,6 +202,7 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
   return schedule;
 };
 
+// TODO - display from start of current day
 export const displaySchedule = (schedule: ScheduleItem[]) => {
   const scheduleContainer = document.getElementById("schedule-container")!;
   const todayTable = document.createElement("table");
@@ -155,8 +217,11 @@ export const displaySchedule = (schedule: ScheduleItem[]) => {
       titleCell.textContent = item.title;
       row.appendChild(titleCell);
 
-      if (item.genre === Genre.Special || item.length >= 60 * 30) {
+      if (item.genre === Genre.Special || item.length >= LONG_VIDEO_TIME) {
         row.classList.add("large-video");
+      }
+      if (item.genre === Genre.Trailer) {
+        row.classList.add("trailer");
       }
     } else {
       const marathonCell = document.createElement("td");

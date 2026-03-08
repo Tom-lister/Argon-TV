@@ -3,7 +3,6 @@ import {
   displaySchedule,
   flattenSchedule,
 } from "./schedule.js";
-import { Genre } from "./videos.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
@@ -25,6 +24,8 @@ displaySchedule(schedule);
 
 /////////////////////////////// VIDEO PLAYER ///////////////////////////////
 
+const currentVideoTitle = document.getElementById("current-video-title")!;
+
 let player: YT.Player | undefined;
 
 function nextVideo(): void {
@@ -36,6 +37,7 @@ function switchToVideo(videoId: string): void {
   if (player && player.loadVideoById) {
     player.loadVideoById(videoId);
     player.unMute();
+    currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
   }
 }
 
@@ -59,6 +61,7 @@ function initPlayer(): void {
       },
     },
   });
+  currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
 }
 
 function onYouTubeIframeAPIReady(): void {

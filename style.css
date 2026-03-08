@@ -1,5 +1,48 @@
 body {
   background-color: #000000;
+  font-family:
+    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
+}
+
+#above-schedule {
+  height: 90vh;
+}
+
+#argon-logo {
+  height: 12vh;
+  margin: auto;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 22px;
+}
+
+#video-footer {
+  color: #a3a3a3;
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+  margin-top: 22px;
+}
+
+#current-video-title {
+  color: #ffffff;
+}
+
+#schedule-indicator {
+  color: #a3a3a3;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 0px;
+  margin-top: 26px;
+}
+
+#down-arrow {
+  height: 2vh;
+  margin: auto;
+  display: block;
+  margin-bottom: 14px;
+  opacity: 0.8;
 }
 
 #schedule-container {
@@ -8,7 +51,6 @@ body {
 }
 
 table {
-  width: 35%;
   padding: 0;
   border-collapse: separate;
   border-spacing: 0 10px;
@@ -19,14 +61,15 @@ td {
   vertical-align: text-top;
   margin: 0;
   color: #ffffff;
-  font-family:
-    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
-    Arial, sans-serif;
 }
 
 .large-video td {
   font-size: 20px;
   color: #0bcc71;
+}
+
+.trailer td {
+  color: #ffffffbb;
 }
 
 .marathon-box {
@@ -48,11 +91,12 @@ td {
 }
 
 #video-container {
-  height: 70vh;
+  height: 68vh;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   position: relative;
   margin: 0 auto;
+  border: 2px solid #0bcc71;
 }
 
 #video-container #yt-player,
