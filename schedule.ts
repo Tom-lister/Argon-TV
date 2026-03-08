@@ -2,7 +2,7 @@ import { formatTime, getEightAmDate } from "./utils.js";
 import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./videos.js";
 import { XORShift } from "random-seedable";
 
-type ScheduleVideo = Video & {
+export type ScheduleVideo = Video & {
   type: "video";
   startTime: number;
 };
@@ -17,7 +17,7 @@ type ScheduleMarathon = {
 type ScheduleItem = ScheduleVideo | ScheduleMarathon;
 
 // 8am, March 8th, 2026 (GMT)
-const START_TIME = 1772956800000;
+const SCHEDULE_START_TIME = 1772956800000;
 // 2 days
 const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24 * 2;
 
@@ -83,17 +83,17 @@ const createMarathon = (
   videos,
 });
 
-export const createSchedule = (currentTime: number): ScheduleItem[] => {
+export const createSchedule = (startTime: number): ScheduleItem[] => {
   const random = new XORShift(123456789);
 
   const schedule: ScheduleItem[] = [];
-  let timeUntilScheduleEnds = START_TIME - currentTime;
+  let timeUntilScheduleEnds = SCHEDULE_START_TIME - startTime;
   let largeItemProbabilityIndex = 0;
 
   const formatVideoForSchedule = (video: Video): ScheduleVideo => {
     const formattedVideo = {
       type: "video" as const,
-      startTime: currentTime + timeUntilScheduleEnds,
+      startTime: startTime + timeUntilScheduleEnds,
       ...video,
     };
     timeUntilScheduleEnds += video.length * 1000;
@@ -190,13 +190,13 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
       schedule.push(formatVideoForSchedule(randomVideo));
     }
 
-    const projectedDate = new Date(currentTime + timeUntilScheduleEnds);
-    const projectedTimeOfDay = projectedDate.getHours();
+    const currentTime = new Date(startTime + timeUntilScheduleEnds);
+    const currentTimeOfDay = currentTime.getHours();
 
-    if (projectedTimeOfDay >= 0 && projectedTimeOfDay < 8) {
-      // Pause at midnight, resume at 8am on the same calendar day (don't add flat 8h or we overshoot)
-      const eightAmSameDay = getEightAmDate(projectedDate);
-      timeUntilScheduleEnds = eightAmSameDay.getTime() - currentTime;
+    if (currentTimeOfDay >= 0 && currentTimeOfDay < 8) {
+      // Pause at midnight, resume at 8am
+      const eightAmSameDay = getEightAmDate(currentTime);
+      timeUntilScheduleEnds = eightAmSameDay.getTime() - startTime;
     }
   }
 

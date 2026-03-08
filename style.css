@@ -171,3 +171,85 @@ td {
 #video-foreground {
   pointer-events: none;
 }
+
+#advert-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#advert {
+  width: 75%;
+  height: 15%;
+  background-color: #000000;
+  cursor: pointer;
+  pointer-events: auto;
+  margin-bottom: 0%;
+  display: flex;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.06);
+  opacity: 0;
+  transition:
+    opacity 1s ease-in-out,
+    margin-bottom 1s ease-in-out;
+}
+
+#advert > div {
+  box-shadow: 6px 0 12px rgba(0, 0, 0, 0.4);
+}
+
+#advert > div:last-child {
+  box-shadow: none;
+}
+
+#advert-body {
+  flex: 20;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding-left: 12px;
+  transition:
+    flex 5s ease-in-out,
+    padding-left 5s ease-in-out;
+}
+
+.advert-header {
+  margin: 0;
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.advert-text {
+  margin: 0;
+  font-size: 22px;
+  color: #0bcc71;
+}
+
+.advert-time {
+  font-size: 20px;
+  color: #ffffffbb;
+  margin-right: 8px;
+}
+
+#advert > div:nth-child(2) {
+  background-color: #0bcc71;
+  flex: 1;
+  z-index: 3;
+}
+
+#advert > div:nth-child(3) {
+  background-color: #3e523b;
+  flex: 1;
+  z-index: 2;
+}
+
+#advert > div:nth-child(4) {
+  background-color: #2c2c2c;
+  flex: 1;
+  z-index: 1;
+}
