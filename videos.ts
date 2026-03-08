@@ -36,6 +36,8 @@ export enum Tag {
   Rooftop = "Carpark Roof",
   JakeVideo = "Filmfreak",
   Documentary = "Documentary",
+  // TODO - Classic
+  // TODO - 2022
 }
 
 export enum Cast {

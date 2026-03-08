@@ -17,8 +17,8 @@ type ScheduleItem = ScheduleVideo | ScheduleMarathon;
 
 // Midnight, March 8th, 2026 (GMT)
 const START_TIME = 1772928000000;
-// 6 hours
-const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24;
+// 2 days
+const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24 * 2;
 
 const LARGE_ITEM_PROBABILITIES = [0, 0.1, 0.25, 0.45, 0.7, 1];
 const LONG_VIDEO_TIME = 60 * 26;
@@ -204,9 +204,36 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
 
 // TODO - display from start of current day
 export const displaySchedule = (schedule: ScheduleItem[]) => {
-  const scheduleContainer = document.getElementById("schedule-container")!;
-  const todayTable = document.createElement("table");
-  schedule.forEach((item) => {
+  const todayTable = document.getElementById("today-schedule")!;
+
+  const now = new Date();
+  const midnightToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
+  const midnightNextMorning = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+  ).getTime();
+  const midnightNextDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 2,
+  ).getTime();
+
+  const todaySchedule = schedule.filter((item) =>
+    item.type === "video"
+      ? item.startTime >= midnightToday && item.startTime < midnightNextMorning
+      : item.videos.some(
+          (video) =>
+            video.startTime >= midnightToday &&
+            video.startTime < midnightNextMorning,
+        ),
+  );
+
+  todaySchedule.forEach((item) => {
     const row = document.createElement("tr");
     if (item.type === "video") {
       const timeCell = document.createElement("td");
@@ -255,5 +282,67 @@ export const displaySchedule = (schedule: ScheduleItem[]) => {
     }
     todayTable.appendChild(row);
   });
-  scheduleContainer.appendChild(todayTable);
+
+  const tomorrowTable = document.getElementById("tomorrow-schedule")!;
+
+  const tomorrowSchedule = schedule.filter((item) =>
+    item.type === "video"
+      ? item.startTime >= midnightNextMorning &&
+        item.startTime < midnightNextDay
+      : item.videos.some(
+          (video) =>
+            video.startTime >= midnightNextMorning &&
+            video.startTime < midnightNextDay,
+        ),
+  );
+
+  tomorrowSchedule.forEach((item) => {
+    const row = document.createElement("tr");
+    if (item.type === "video") {
+      const timeCell = document.createElement("td");
+      timeCell.textContent = formatTime(item.startTime);
+      row.appendChild(timeCell);
+
+      const titleCell = document.createElement("td");
+      titleCell.textContent = item.title;
+      row.appendChild(titleCell);
+
+      if (item.genre === Genre.Special || item.length >= LONG_VIDEO_TIME) {
+        row.classList.add("large-video");
+      }
+      if (item.genre === Genre.Trailer) {
+        row.classList.add("trailer");
+      }
+    } else {
+      const marathonCell = document.createElement("td");
+      marathonCell.setAttribute("colspan", "2");
+
+      const marathonBox = document.createElement("div");
+      marathonBox.classList.add("marathon-box");
+
+      const marathonTitle = document.createElement("p");
+      marathonTitle.textContent = item.title;
+      marathonBox.appendChild(marathonTitle);
+
+      const marathonTable = document.createElement("table");
+      item.videos.forEach((video) => {
+        const videoRow = document.createElement("tr");
+
+        const videoTimeCell = document.createElement("td");
+        videoTimeCell.textContent = formatTime(video.startTime);
+        videoRow.appendChild(videoTimeCell);
+
+        const videoTitleCell = document.createElement("td");
+        videoTitleCell.textContent = video.title;
+        videoRow.appendChild(videoTitleCell);
+
+        marathonTable.appendChild(videoRow);
+      });
+      marathonBox.appendChild(marathonTable);
+
+      marathonCell.appendChild(marathonBox);
+      row.appendChild(marathonCell);
+    }
+    tomorrowTable.appendChild(row);
+  });
 };
