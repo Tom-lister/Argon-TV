@@ -88,8 +88,8 @@ const prepareAdverts = (videoProgress: number = 0) => {
       const advertWait2 =
         minAdvertWait2 + Math.random() * (maxAdvertWait2 - minAdvertWait2);
 
-      setTimeout(() => showAdvert(advertProps1), advertWait1 * 1000);
-      setTimeout(() => showAdvert(advertProps2), advertWait2 * 1000);
+      setTimeout(() => showAdvert(advertProps1), 2000); //advertWait1 * 1000
+      setTimeout(() => showAdvert(advertProps2), advertWait2 * 1200); //advertWait2 * 1000
     } else {
       const advertProps = getAdvertData(upcomingVideos);
 
@@ -98,7 +98,7 @@ const prepareAdverts = (videoProgress: number = 0) => {
       const advertWait =
         minAdvertWait + Math.random() * (maxAdvertWait - minAdvertWait);
 
-      setTimeout(() => showAdvert(advertProps), advertWait * 1000);
+      setTimeout(() => showAdvert(advertProps), 2000); //advertWait * 1000
     }
   }
 };
@@ -123,6 +123,9 @@ const showAdvert = ({ header, title, time }: AdvertData) => {
   timeSpan.textContent = time;
   advertText.appendChild(timeSpan);
   advertText.appendChild(document.createTextNode(` ${title}`));
+  if (title.length >= 50) {
+    advertText.style.fontSize = "20px";
+  }
   advertBody.appendChild(advertText);
 
   advert.appendChild(advertBody);
