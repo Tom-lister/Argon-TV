@@ -3,22 +3,23 @@ import {
   displaySchedule,
   flattenSchedule,
 } from "./schedule.js";
+import { getEightAmDate } from "./utils.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
-let currentTime = Date.now();
+let timeWhenLoaded = Date.now();
 
-const schedule = createSchedule(currentTime);
+const schedule = createSchedule(timeWhenLoaded);
 
 const flattenedSchedule = flattenSchedule(schedule);
 
 let currentVideoIndex = 0;
-while (currentTime > flattenedSchedule[currentVideoIndex + 1].startTime) {
+while (timeWhenLoaded > flattenedSchedule[currentVideoIndex + 1].startTime) {
   currentVideoIndex++;
 }
 
 const firstVideoStartTime =
-  currentTime - flattenedSchedule[currentVideoIndex].startTime;
+  timeWhenLoaded - flattenedSchedule[currentVideoIndex].startTime;
 
 displaySchedule(schedule);
 
@@ -27,11 +28,7 @@ displaySchedule(schedule);
 const currentVideoTitle = document.getElementById("current-video-title")!;
 
 let player: YT.Player | undefined;
-
-function nextVideo(): void {
-  currentVideoIndex = (currentVideoIndex + 1) % flattenedSchedule.length;
-  switchToVideo(flattenedSchedule[currentVideoIndex].id);
-}
+let onAir = true;
 
 function switchToVideo(videoId: string): void {
   if (player && player.loadVideoById) {
@@ -39,6 +36,15 @@ function switchToVideo(videoId: string): void {
     player.unMute();
     currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
   }
+}
+
+function nextVideo(): void {
+  currentVideoIndex++;
+  switchToVideo(flattenedSchedule[currentVideoIndex].id);
+}
+
+function offAirVideo(): void {
+  // TODO
 }
 
 // TODO - ensure always highest resolution
@@ -57,7 +63,23 @@ function initPlayer(): void {
     events: {
       onStateChange(event: YT.OnStateChangeEvent) {
         if (event.data === YT.PlayerState.ENDED) {
-          nextVideo();
+          // Check if we've stopped broadcasting for the day
+          const currentTime = new Date();
+          const currentHour = currentTime.getHours();
+          if (currentHour >= 0 && currentHour < 8) {
+            const nextVideoTime =
+              flattenedSchedule[currentVideoIndex + 1].startTime;
+            const eightAmToday = getEightAmDate(currentTime).getTime();
+            if (nextVideoTime === eightAmToday) {
+              onAir = false;
+            }
+          }
+
+          if (onAir) {
+            nextVideo();
+          } else {
+            offAirVideo();
+          }
         }
       },
     },

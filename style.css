@@ -92,6 +92,7 @@ body {
   justify-content: center;
   gap: 5%;
   margin: 0 auto;
+  margin-bottom: 75px;
 }
 
 .daily-schedule {

@@ -1,3 +1,4 @@
+import { formatTime, getEightAmDate } from "./utils.js";
 import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./videos.js";
 import { XORShift } from "random-seedable";
 
@@ -15,20 +16,13 @@ type ScheduleMarathon = {
 
 type ScheduleItem = ScheduleVideo | ScheduleMarathon;
 
-// Midnight, March 8th, 2026 (GMT)
-const START_TIME = 1772928000000;
+// 8am, March 8th, 2026 (GMT)
+const START_TIME = 1772956800000;
 // 2 days
 const SCHEDULE_LENGTH = 1000 * 60 * 60 * 24 * 2;
 
 const LARGE_ITEM_PROBABILITIES = [0, 0.1, 0.25, 0.45, 0.7, 1];
 const LONG_VIDEO_TIME = 60 * 26;
-
-const formatTime = (utcMs: number): string => {
-  const date = new Date(utcMs);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
-};
 
 export const flattenSchedule = (schedule: ScheduleItem[]): ScheduleVideo[] =>
   schedule.flatMap((item) => {
@@ -89,7 +83,6 @@ const createMarathon = (
   videos,
 });
 
-// TODO - pause at midnight, resume at 8am
 export const createSchedule = (currentTime: number): ScheduleItem[] => {
   const random = new XORShift(123456789);
 
@@ -120,7 +113,6 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
         "tagMarathon",
         "groupMarathon",
         "castMarathon",
-        "longVideo",
         "longVideo",
       ]);
 
@@ -197,39 +189,35 @@ export const createSchedule = (currentTime: number): ScheduleItem[] => {
       const randomVideo = random.choice(weightedVideos);
       schedule.push(formatVideoForSchedule(randomVideo));
     }
+
+    const projectedDate = new Date(currentTime + timeUntilScheduleEnds);
+    const projectedTimeOfDay = projectedDate.getHours();
+
+    if (projectedTimeOfDay >= 0 && projectedTimeOfDay < 8) {
+      // Pause at midnight, resume at 8am on the same calendar day (don't add flat 8h or we overshoot)
+      const eightAmSameDay = getEightAmDate(projectedDate);
+      timeUntilScheduleEnds = eightAmSameDay.getTime() - currentTime;
+    }
   }
 
   return schedule;
 };
 
-// TODO - display from start of current day
 export const displaySchedule = (schedule: ScheduleItem[]) => {
   const todayTable = document.getElementById("today-schedule")!;
 
   const now = new Date();
-  const midnightToday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-  ).getTime();
-  const midnightNextMorning = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + 1,
-  ).getTime();
-  const midnightNextDay = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + 2,
-  ).getTime();
+  const eightAmToday = getEightAmDate(now).getTime();
+  const eightAmNextMorning = getEightAmDate(now, 1).getTime();
+  const eightAmNextDay = getEightAmDate(now, 2).getTime();
 
   const todaySchedule = schedule.filter((item) =>
     item.type === "video"
-      ? item.startTime >= midnightToday && item.startTime < midnightNextMorning
+      ? item.startTime >= eightAmToday && item.startTime < eightAmNextMorning
       : item.videos.some(
           (video) =>
-            video.startTime >= midnightToday &&
-            video.startTime < midnightNextMorning,
+            video.startTime >= eightAmToday &&
+            video.startTime < eightAmNextMorning,
         ),
   );
 
@@ -287,12 +275,11 @@ export const displaySchedule = (schedule: ScheduleItem[]) => {
 
   const tomorrowSchedule = schedule.filter((item) =>
     item.type === "video"
-      ? item.startTime >= midnightNextMorning &&
-        item.startTime < midnightNextDay
+      ? item.startTime >= eightAmNextMorning && item.startTime < eightAmNextDay
       : item.videos.some(
           (video) =>
-            video.startTime >= midnightNextMorning &&
-            video.startTime < midnightNextDay,
+            video.startTime >= eightAmNextMorning &&
+            video.startTime < eightAmNextDay,
         ),
   );
 
