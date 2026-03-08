@@ -41,6 +41,7 @@ function switchToVideo(videoId: string): void {
   }
 }
 
+// TODO - ensure always highest resolution
 function initPlayer(): void {
   player = new YT.Player("yt-player", {
     videoId: flattenedSchedule[currentVideoIndex].id,
@@ -81,8 +82,11 @@ if (typeof YT !== "undefined" && (YT as { loaded?: boolean }).loaded) {
   initPlayer();
 }
 
-document.getElementById("unmute-btn")!.addEventListener("click", () => {
+document.getElementById("start-btn")!.addEventListener("click", () => {
   if (player && player.unMute) {
+    const splashScreen = document.getElementById("splash-screen")!;
+    splashScreen.style.visibility = "hidden";
+    splashScreen.style.opacity = "0";
     player.unMute();
   }
 });
