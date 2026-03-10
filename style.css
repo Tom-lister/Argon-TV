@@ -5,6 +5,11 @@ body {
     Arial, sans-serif;
 }
 
+@font-face {
+  font-family: "Fixedsys";
+  src: url("FixederSys1x.ttf") format("truetype");
+}
+
 /* TODO - improve mobile appearance */
 
 #splash-screen {
@@ -18,6 +23,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 5%;
   color: #ffffff;
   font-size: 24px;
   text-align: center;
@@ -28,8 +34,11 @@ body {
 }
 
 #splash-screen p {
+  margin: 0;
   color: #0bcc71;
-  font-size: 64px;
+  font-size: 80px;
+  font-family: "Fixedsys";
+  letter-spacing: -1px;
 }
 
 #start-btn {
@@ -271,4 +280,37 @@ td {
   flex: 1;
   min-width: 8px;
   z-index: 1;
+}
+
+#ident-text {
+  align-self: center;
+  text-align: center;
+  font-family: "Fixedsys";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 0.6s linear;
+  margin-top: 2%;
+}
+
+#ident-text > p {
+  margin: 0;
+  text-shadow:
+    0px 0px 10px black,
+    0px 0px 10px black,
+    0px 0px 10px black;
+  letter-spacing: -1px;
+}
+
+#ident-text > p:nth-child(1) {
+  color: #0bcc71;
+  font-size: 80px;
+}
+
+#ident-text > p:nth-child(2) {
+  color: #ffffff;
+  font-size: 48px;
 }

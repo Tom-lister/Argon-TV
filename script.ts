@@ -1,10 +1,5 @@
 import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID } from "./constants.js";
-import {
-  createSchedule,
-  displaySchedule,
-  ScheduleIdent,
-  ScheduleVideo,
-} from "./schedule.js";
+import { createSchedule, displaySchedule, ScheduleVideo } from "./schedule.js";
 import {
   formatTime,
   getEightAmDate,
@@ -42,6 +37,7 @@ type AdvertData = {
   time: string;
 };
 
+// TODO - use seeded random
 const getAdvertData = (upcomingVideos: ScheduleVideo[]) => {
   const nextVideo = upcomingVideos[0];
   const nonImmediateVideos = upcomingVideos.slice(1);
@@ -172,6 +168,61 @@ const deleteAdvert = () => {
   banner.remove();
 };
 
+/////////////////////////////// IDENT TEXT ///////////////////////////////
+
+type IdentTextData = {
+  title: string;
+  time: string;
+  duration: number;
+};
+
+const prepareIdentText = (videoProgress: number = 0) => {
+  const video = flattenedSchedule[currentVideoIndex];
+
+  if (video.type === "ident" && video.promote) {
+    const promoteVideo = flattenedSchedule
+      .slice(currentVideoIndex + 1)
+      .find((item) => item.id === video.promote?.id);
+
+    console.log(flattenedSchedule.slice(currentVideoIndex + 1));
+
+    const identWait = video.promote.textAppear + 0.7 - videoProgress;
+
+    if (promoteVideo && "title" in promoteVideo && identWait > 0) {
+      setTimeout(() => {
+        showIdentText({
+          title: video.promote!.title,
+          time: formatTime(promoteVideo.startTime),
+          duration: video.length - video.promote!.textAppear,
+        });
+      }, identWait * 1000);
+    }
+  }
+};
+
+const showIdentText = ({ title, time, duration }: IdentTextData) => {
+  const bannerContainer = document.getElementById("banner-container")!;
+  const identText = document.createElement("div");
+  identText.id = "ident-text";
+  identText.innerHTML = `<p>${title}</p><p>${time}</p>`;
+  identText.style.transition = `opacity 0.6s linear, transform ${duration}s linear`;
+  bannerContainer.appendChild(identText);
+
+  // Start animation
+  void identText.offsetHeight;
+
+  identText.style.opacity = "1";
+  // Defer transform to next frame so transition has a "from" state to animate from
+  requestAnimationFrame(() => {
+    identText.style.transform = "scale(1.25)";
+  });
+};
+
+const clearIdentText = () => {
+  const identText = document.getElementById("ident-text")!;
+  identText?.remove();
+};
+
 /////////////////////////////// VIDEO PLAYER ///////////////////////////////
 
 let player: YT.Player | undefined;
@@ -194,6 +245,8 @@ function nextVideo(): void {
     player.unMute();
     updateVideoTitle();
     prepareAdverts();
+    prepareIdentText();
+    clearIdentText();
   }
 }
 
@@ -261,6 +314,7 @@ function initPlayer(): void {
 
   updateVideoTitle();
   prepareAdverts(videoProgress);
+  prepareIdentText(videoProgress);
 }
 
 function onYouTubeIframeAPIReady(): void {

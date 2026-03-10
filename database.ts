@@ -1263,22 +1263,51 @@ export type Ident = {
   id: string;
   length: number;
   avoid?: string[];
-  promote?: string;
+  promote?: {
+    id: string;
+    title: string;
+    textAppear: number;
+  };
 };
 
 export const IDENTS: Ident[] = [
+  // {
+  //   // Ego Death
+  //   type: "ident",
+  //   id: "_2S_kGOtD5w",
+  //   length: 10,
+  //   avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  // },
+  // {
+  //   // Surreal
+  //   type: "ident",
+  //   id: "JG-dGY8UfzE",
+  //   length: 10,
+  //   avoid: ["I3fJmOtakp4", "MjZOLHgMl_w", "wDSA9gZjBWs", "I8JWxkjA_fY"],
+  // },
+  // {
+  //   // Wedding scene
+  //   type: "ident",
+  //   id: "kfi03QlP6ro",
+  //   length: 31,
+  //   avoid: ["L5-A__dkgKM", "uawg7MAD3gA", "6CLG2uFUU2E", "NhzkgI2tUAg"],
+  // },
+  // {
+  //   // Louis Theroux
+  //   type: "ident",
+  //   id: "PSLCk29_pEc",
+  //   length: 20,
+  //   avoid: ["wDx5TYQWsqc"],
+  // },
   {
-    // Ego Death
+    // Heistwars: Redux
     type: "ident",
-    id: "_2S_kGOtD5w",
-    length: 10,
-    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
-  },
-  {
-    // Surreal
-    type: "ident",
-    id: "JG-dGY8UfzE",
-    length: 10,
-    avoid: ["I3fJmOtakp4", "MjZOLHgMl_w", "wDSA9gZjBWs", "I8JWxkjA_fY"],
+    id: "3bySDF6oo6w",
+    length: 17,
+    promote: {
+      id: "YzAQwxhMluM",
+      title: "Heistwars: Redux",
+      textAppear: 11.6,
+    },
   },
 ];

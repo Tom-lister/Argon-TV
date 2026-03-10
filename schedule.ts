@@ -80,7 +80,9 @@ const getValidIdents = (
   const promotionalIdents = IDENTS.filter(
     (ident) =>
       ident.promote &&
-      flattenedUpcomingProgramming.some((item) => item.id === ident.promote),
+      flattenedUpcomingProgramming.some(
+        (item) => item.id === ident.promote?.id,
+      ),
   );
 
   const neighbouringVideos: Video[] = [];
@@ -103,7 +105,12 @@ const getValidIdents = (
     ...nonPromotionalIdents,
     ...promotionalIdents.filter(
       (ident) =>
-        !neighbouringVideos.some((video) => ident.avoid?.includes(video.id)),
+        !neighbouringVideos.some(
+          (video) =>
+            ident.avoid?.includes(video.id) ||
+            // Don't promote if it's up next
+            ident.promote?.id === video.id,
+        ),
     ),
   ];
 
@@ -123,7 +130,7 @@ const getWeightedIdentArray = (
       (item) => item.id === ident.id,
     );
     const identFrequency =
-      mostRecentIndex >= 0 ? mostRecentIndex : reversedIdents.length || 1;
+      mostRecentIndex > 0 ? mostRecentIndex : reversedIdents.length || 1;
     weightedIdentArray.push(...Array(identFrequency).fill(ident));
   }
 
@@ -145,7 +152,7 @@ const getWeightedAttributeArray = <T>(
       (item) => item.attribute === attribute,
     );
     const attributeFrequency =
-      mostRecentIndex >= 0 ? mostRecentIndex : reversedProgramming.length || 1;
+      mostRecentIndex > 0 ? mostRecentIndex : reversedProgramming.length || 1;
     weightedAttributeArray.push(...Array(attributeFrequency).fill(attribute));
   }
 
