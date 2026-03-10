@@ -61,6 +61,7 @@ export enum Channel {
 }
 
 export type Video = {
+  type: "video";
   id: string;
   title: string;
   length: number;
@@ -71,8 +72,10 @@ export type Video = {
   channel: Channel;
 };
 
+// TODO - cut out endcards
 export const VIDEOS: Video[] = [
   {
+    type: "video",
     id: "NhzkgI2tUAg",
     title: "Bob & Mike's Last Ride",
     length: 416,
@@ -82,6 +85,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "zAw07AkDel0",
     title: "WE'RE DOING IT AGAIN",
     length: 150,
@@ -89,6 +93,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "MKwrxh6NEg4",
     title: "ZIPWHARF (2024) - FULL TRAILER",
     length: 137,
@@ -96,6 +101,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "Kgubk4mFnZs",
     title: "ZIPWHARF (2024) - Teaser Trailer",
     length: 61,
@@ -103,6 +109,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "Te3i3h_7FIs",
     title: "IMPORTANT ANNOUNCEMENT",
     length: 289,
@@ -110,6 +117,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "QNWpIUlcXKE",
     title: "Argon Films 2022",
     length: 3725,
@@ -117,6 +125,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "pvujSmljshw",
     title: "Too Hot Sauce",
     length: 1162,
@@ -126,6 +135,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "SZlU8qSJZsg",
     title: "The Void War",
     length: 54,
@@ -134,6 +144,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "-9Ky0YgclDA",
     title: "Out Of The Void He Comes",
     length: 48,
@@ -142,6 +153,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "LTaFVW-Z2Mc",
     title: "Philosophical Thoughts",
     length: 43,
@@ -150,6 +162,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "MBiKITiH5wQ",
     title: "The Funniest Joke In The World",
     length: 16,
@@ -158,6 +171,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "chCByc6o-h8",
     title: "Ca$h Masterz",
     length: 229,
@@ -167,6 +181,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "fEJ9YPOS9Vw",
     title: "Syon Lane",
     length: 355,
@@ -176,6 +191,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "I8JWxkjA_fY",
     title: "Terrifying Human Baby Hybrid Caught On Camera",
     length: 124,
@@ -184,6 +200,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "6CLG2uFUU2E",
     title: "BOB & MIKE 3 - Regenerations",
     length: 471,
@@ -194,6 +211,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "D5Z4D33GGmQ",
     title:
       "SCARIEST GMOD NEXTBOT EVER??? SCARIEST UNKNOWN CREATURE IN GMOD??? [JUMPSCARE WARNING] (Scary)",
@@ -203,6 +221,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "LqJQ6paC6a0",
     title: "MadD G - Imagine",
     length: 213,
@@ -211,6 +230,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "9RwWJdjXeLE",
     title: "Top 7 Places in London",
     length: 159,
@@ -219,6 +239,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "B6TOgXNmI7c",
     title: "How To Check if your House is Haunted",
     length: 301,
@@ -229,6 +250,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "TW0RhJ8ADwM",
     title: "Tiny Eminem",
     length: 163,
@@ -237,6 +259,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "fR5P8Q7YeDg",
     title: "MadD G - triBute 2 LiZ (R.i.P Queen)",
     length: 156,
@@ -245,6 +268,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "wuWg4UVi4gI",
     title: "trying cigarettes for the first time",
     length: 135,
@@ -254,6 +278,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "6TsEJwD4zlc",
     title: "Wizz Air",
     length: 11,
@@ -262,6 +287,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "vnfX23-QX-8",
     title: "THE ULTIMATE PIMP",
     length: 279,
@@ -272,6 +298,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "04KPRqnPEFQ",
     title: "20 GUYS",
     length: 314,
@@ -281,6 +308,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "5wym7TJMIIM",
     title: "You should jump",
     length: 165,
@@ -289,6 +317,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "PbEHtA304l8",
     title: "Sid Movies Presents: Watching the Truman Show for the First Time",
     length: 362,
@@ -297,6 +326,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "-pToDboBzQU",
     title: "swamp man",
     length: 201,
@@ -306,6 +336,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "a_SY48Fca8E",
     title: "the co-worker who tells awful stories",
     length: 187,
@@ -315,6 +346,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "MsSh5MTuSiE",
     title: "What If Evangelion Was Real?",
     length: 268,
@@ -324,6 +356,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "My1IOjLStWY",
     title: "QueenAI",
     length: 212,
@@ -332,6 +365,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "J1NNq3QrOX0",
     title: "Who's That Weird Guy Over There?",
     length: 343,
@@ -342,6 +376,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "A2QWcIS7VyY",
     title: "#GoneViral",
     length: 452,
@@ -351,6 +386,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "xVxJCqWtwVw",
     title:
       "VNDERVVHELMER - Scary Movies (Victim of Involuntary Technological Interface)",
@@ -360,6 +396,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "VdiEP2VILFQ",
     title: "we're out of video ideas",
     length: 155,
@@ -369,6 +406,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "6DHy1ZVY070",
     title: "SCARIEST GMOD ARG EVER??????? (REAL)",
     length: 258,
@@ -377,6 +415,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "_xCjZWZPov8",
     title: "PISS SHOW",
     length: 226,
@@ -387,6 +426,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "hSlDwUIneG8",
     title: "The Visitor",
     length: 564,
@@ -396,6 +436,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "_FqNfxggfOw",
     title: "WHAT TO DO IF A SHADOW MAN IS FOLLOWING YOU",
     length: 224,
@@ -406,6 +447,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "xp2AE9x3oUc",
     title: "REHABILITATION SQUAD",
     length: 324,
@@ -415,6 +457,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "5Ci94qE4i0g",
     title: "finding a cool rock in the woods",
     length: 287,
@@ -425,6 +468,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "rRkNCDgqbdo",
     title: "Looking For Cryptids",
     length: 246,
@@ -434,6 +478,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "uRYu1GEP754",
     title: "WELCOME TO ARGON FILMS",
     length: 180,
@@ -441,6 +486,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "8Hv3-iHUG7s",
     title: "percy manthey: outside",
     length: 457,
@@ -450,6 +496,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "GWSD182sGcs",
     title: "RUNNING LATE | 2022 Oscars Film Competition",
     length: 2094,
@@ -457,6 +504,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "BDN_BW-koQE",
     title: "Percy's Birthday Extravaganza",
     length: 273,
@@ -465,6 +513,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "pmyw8fVY_0c",
     title: "ILLUMINATI CONFIRMED - The MadD G Show",
     length: 432,
@@ -473,6 +522,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "EdifJyTOpMk",
     title: "The Three Jakes",
     length: 852,
@@ -482,6 +532,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "GeR5qRu-R1Q",
     title: "MadD G - The Inside Story",
     length: 820,
@@ -491,6 +542,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "gHOHP3aXnWM",
     title: "AMATEUR LABS - Interview With Map Creator",
     length: 295,
@@ -499,6 +551,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "ybE2PPPRruY",
     title: "STOP THE WAR - MadD G",
     length: 94,
@@ -507,6 +560,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "q442cF7mMiM",
     title: "Anti-Sugar PSA - 5th Anniversary Edition",
     length: 513,
@@ -517,6 +571,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "cyPSOT53RHs",
     title: "Poop Show",
     length: 236,
@@ -527,6 +582,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "2TEQkQpzK04",
     title: "SwaggyWhiteBoy",
     length: 199,
@@ -535,6 +591,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "prV-LL-dWkY",
     title: "The Bunny",
     length: 117,
@@ -544,6 +601,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "zxzl6P3Rdw0",
     title: "Seinfeld Lore",
     length: 366,
@@ -553,6 +611,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "wDSA9gZjBWs",
     title: "The Slob",
     length: 269,
@@ -562,6 +621,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "IbRNGNDqVcI",
     title: "RAP SNACKS",
     length: 363,
@@ -571,6 +631,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "k1YssBA4MtU",
     title: "Antipsychosis",
     length: 147,
@@ -579,6 +640,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "cgw2etw2Ysk",
     title: "Percy Manthey's The Unethicals",
     length: 2053,
@@ -587,6 +649,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "TMoGFctnCms",
     title: "Every Kill/Death in Argon Films (as of 24/03/21)",
     length: 386,
@@ -594,6 +657,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "YR7XQ2Lhn4w",
     title: "A Gift For Penelope",
     length: 542,
@@ -602,6 +666,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "mZWOv9E4vls",
     title: "MadD MaNiFESto",
     length: 128,
@@ -610,6 +675,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "6UB7eNvENFI",
     title: "Every Teen Movie Opening",
     length: 241,
@@ -618,6 +684,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "uawg7MAD3gA",
     title: "The Bread Man: The Depraved Adventures of Bob & Mike, Part II",
     length: 260,
@@ -627,6 +694,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "L5-A__dkgKM",
     title: "The Car: The Depraved Adventures of Bob & Mike, Part I",
     length: 377,
@@ -636,6 +704,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "wDx5TYQWsqc",
     title: "What the Heck is a Participatory Documentary?",
     length: 342,
@@ -645,6 +714,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "MDk94MlYpSM",
     title: "THE TRUTH ABOUT 5G - The MadD G Show",
     length: 647,
@@ -653,6 +723,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "itWurrJ-Klc",
     title: "ATTACK OF THE NAZI NAZIS",
     length: 240,
@@ -661,6 +732,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "-CZ3040l2mk",
     title: "Isolative",
     length: 421,
@@ -668,6 +740,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "o7jnS_NH3fg",
     title: "[LOST VIDEO] How To Avoid Morbid Obesity",
     length: 219,
@@ -675,6 +748,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "CPKOPic-GLI",
     title: "A Sketch That Does Not Contain The Final Accommodation",
     length: 312,
@@ -684,6 +758,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "fkirWoHf7r0",
     title: "FINAL ACCOMMODATION'S LAW",
     length: 436,
@@ -694,6 +769,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "BYaydkjjHbc",
     title: "PO'S LAW",
     length: 249,
@@ -704,6 +780,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "gfobuKtxllA",
     title: "MURPHY'S LAW",
     length: 235,
@@ -713,6 +790,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "s7Z_qrA6fKA",
     title: "Toy Story 5",
     length: 164,
@@ -720,6 +798,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "FT4apOM8yUU",
     title: "Top 50 Most Awesome Breaking Bad Facts You Didn't Know",
     length: 133,
@@ -727,6 +806,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "uBuTW49B_Zc",
     title: "Vaccines & Violence - An In-depth Documentary",
     length: 369,
@@ -736,6 +816,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "opQ0VKLAYdg",
     title: "Is Chicken Even Real? - An In-Depth Documentary",
     length: 452,
@@ -745,6 +826,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "I3fJmOtakp4",
     title: "Inception 9: Jerry Seinfeld Yiffs the Planet",
     length: 211,
@@ -755,6 +837,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "ALlkw-8CMqU",
     title: "Family Guy Intro (HD)",
     length: 239,
@@ -762,6 +845,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "J7di-a5eso4",
     title: "The House of the Future",
     length: 199,
@@ -769,6 +853,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "zFAjhOKS6LA",
     title:
       "reactors react to reactionists reactioning to reactionors playing the chrome dino game - REACTION",
@@ -778,6 +863,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "01Rw2f-qy1M",
     title: "A Legal Message from MadD G",
     length: 212,
@@ -786,6 +872,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "kF-dT9dsudQ",
     title: "Scariest Video Ever?",
     length: 196,
@@ -796,6 +883,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "czm5KnE4Ccw",
     title: "Secrets of the Cheese Grater | A Spiritual Journey",
     length: 346,
@@ -803,6 +891,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "qX07QHTCUZ0",
     title:
       "the return of the revenge of the fall of the curse of the ghost | a czechslovakian art film",
@@ -813,6 +902,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "e3ZMU8rNpVE",
     title: "How To Stop Diseases",
     length: 223,
@@ -820,6 +910,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "UHsc8ikg33o",
     title: "Anti-Sugar PSA",
     length: 197,
@@ -829,6 +920,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "MjZOLHgMl_w",
     title: "The Passage - Official Trailer",
     length: 26,
@@ -837,6 +929,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "rY20DPpQvzY",
     title: "[GMOD] Energy Sources Guide",
     length: 256,
@@ -846,6 +939,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "UaZw6oTmsw0",
     title: "Physics Revision Resource",
     length: 213,
@@ -855,6 +949,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "EIuW5YNmtQA",
     title: "Brutal Fight Scene",
     length: 215,
@@ -864,6 +959,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "cToieWTKGNk",
     title: "Underground Fight",
     length: 126,
@@ -873,6 +969,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "Z-9WavpxLbE",
     title: "Rooftop Fight",
     length: 129,
@@ -882,6 +979,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    type: "video",
     id: "M_hcemMrsvs",
     title:
       "HEISTWARS: PATTERSON RISES | The Greatest Challenge Yet (Feat: Eric Roberts)",
@@ -890,6 +988,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "6Ar5XfCA_H4",
     title: "IMPORTANT ANOUNCEMENT",
     length: 52,
@@ -897,6 +996,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "AsvA6Wzkoxw",
     title: "HEISTWARS: THE RESCUE | Sweets, Surveillance, and Stupidity",
     length: 1959,
@@ -904,6 +1004,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "YzAQwxhMluM",
     title: "HEISTWARS: REDUX | New Target, New Teams, New Rules...",
     length: 2440,
@@ -911,6 +1012,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "qcORfqlcjFY",
     title: "HEISTWARS | Simulation-Based Game Show",
     length: 1632,
@@ -918,6 +1020,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "6n0UVlYlQ1c",
     title: "HEISTWARS | Trailer (Experimental Game Show)",
     length: 74,
@@ -925,6 +1028,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "vus7tOATvjg",
     title: "SPLICED | Short found-footage film",
     length: 821,
@@ -933,6 +1037,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "tkEslxHHSfA",
     title: "THE WITNESS | Linear version",
     length: 461,
@@ -941,6 +1046,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "vmrLapxoeag",
     title: "THE WITNESS | Short mystery-thriller film",
     length: 712,
@@ -949,6 +1055,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "zYYqwoxmnkg",
     title: "The Final Accommodation - Trailer",
     length: 88,
@@ -956,6 +1063,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "UjGqf_coU_U",
     title: "THE UNETHICALS | Behind The Scenes",
     length: 476,
@@ -966,6 +1074,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "afBR-UHN4hk",
     title: "THE UNETHICALS | Short Action-Comedy Film",
     length: 2053,
@@ -974,6 +1083,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "hNYqeHSXAnQ",
     title: "THE UNETHICALS | Trailer",
     length: 113,
@@ -981,6 +1091,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "lXIacRj9ssw",
     title: "A video which is exactly two minutes long",
     length: 167,
@@ -990,6 +1101,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "1Kt1n8VkomU",
     title: "A sketch that does not contain the letter Z",
     length: 182,
@@ -999,6 +1111,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "Y8pKMBZkfBo",
     title: "THE UNETHICALS | Concept trailer",
     length: 151,
@@ -1008,6 +1121,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "TqKg8RAD8sU",
     title: "Temporary accommodation",
     length: 336,
@@ -1017,6 +1131,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    type: "video",
     id: "aVVHC_u9xcw",
     title: "Macbeth on a Budget: A Tale of Disappointment",
     length: 70,
@@ -1025,6 +1140,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "pwS2DgaBvuw",
     title: "NOVA BLANC",
     length: 301,
@@ -1034,6 +1150,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "Xh463JCdFZI",
     title: "CANOLI AND CORRUPTION",
     length: 325,
@@ -1043,6 +1160,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "_eT5EcqZPyA",
     title: "CHAIRS",
     length: 249,
@@ -1052,6 +1170,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "SHSxW-gQo_s",
     title: "Hamlet Action",
     length: 183,
@@ -1061,6 +1180,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "FvG3rIry7zY",
     title: "a TEAM - AN ACTION FILM!",
     length: 1401,
@@ -1069,6 +1189,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "Su1X1l2olm0",
     title: "DEAD FRIENDSHIP",
     length: 230,
@@ -1077,6 +1198,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.BFIFamilyFilms,
   },
   {
+    type: "video",
     id: "RuVGmph5nYA",
     title: "Rookie",
     length: 256,
@@ -1086,6 +1208,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.JakeFilmFreak,
   },
   {
+    type: "video",
     id: "AurJgX1R4ZI",
     title: "The Outbreak (2021 Restoration)",
     length: 173,
@@ -1095,6 +1218,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.JakeFilmFreak,
   },
   {
+    type: "video",
     id: "jkllvh1pOJM",
     title:
       "Cambridge Film Studies professor explains the hidden metaphors behind Robocop (1987)",
@@ -1104,6 +1228,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.JakeFilmFreak,
   },
   {
+    type: "video",
     id: "9XVdAlIr2TM",
     title: "BFI Family films exposé",
     length: 405,
@@ -1113,6 +1238,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.JakeFilmFreak,
   },
   {
+    type: "video",
     id: "1zID1KnU-OQ",
     title: "Licenziato!",
     length: 181,
@@ -1122,6 +1248,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.JakeFilmFreak,
   },
   {
+    type: "video",
     id: "_0o-qyzBUws",
     title: "The Discussion - A Blaise Jones Film",
     length: 291,
@@ -1132,6 +1259,7 @@ export const VIDEOS: Video[] = [
 ];
 
 export type Ident = {
+  type: "ident";
   id: string;
   length: number;
   avoid?: string[];
@@ -1141,8 +1269,16 @@ export type Ident = {
 export const IDENTS: Ident[] = [
   {
     // Ego Death
+    type: "ident",
     id: "_2S_kGOtD5w",
     length: 10,
     avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  },
+  {
+    // Surreal
+    type: "ident",
+    id: "JG-dGY8UfzE",
+    length: 10,
+    avoid: ["I3fJmOtakp4", "MjZOLHgMl_w", "wDSA9gZjBWs", "I8JWxkjA_fY"],
   },
 ];

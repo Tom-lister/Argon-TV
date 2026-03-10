@@ -2,29 +2,37 @@ import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID } from "./constants.js";
 import {
   createSchedule,
   displaySchedule,
-  flattenSchedule,
+  ScheduleIdent,
   ScheduleVideo,
 } from "./schedule.js";
-import { formatTime, getEightAmDate, isFirstForDay } from "./utils.js";
+import {
+  formatTime,
+  getEightAmDate,
+  isFirstForDay,
+  flattenSchedule,
+} from "./utils.js";
 import { Genre } from "./database.js";
+
+const videoFooter = document.getElementById("video-footer")!;
+let onAir = true;
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
-const startTime = Date.now();
+const loadTime = Date.now();
 
-const schedule = createSchedule(startTime);
+const schedule = createSchedule(loadTime);
 
 const flattenedSchedule = flattenSchedule(schedule);
 
 let currentVideoIndex = 0;
-while (startTime > flattenedSchedule[currentVideoIndex + 1].startTime) {
+while (loadTime > flattenedSchedule[currentVideoIndex + 1].startTime) {
   currentVideoIndex++;
 }
 
 const firstVideoStartTime =
-  startTime - flattenedSchedule[currentVideoIndex].startTime;
+  loadTime - flattenedSchedule[currentVideoIndex].startTime;
 
-displaySchedule(schedule);
+displaySchedule(schedule, loadTime);
 
 /////////////////////////////// ADVERT ///////////////////////////////
 
@@ -58,9 +66,14 @@ const getAdvertData = (upcomingVideos: ScheduleVideo[]) => {
 const prepareAdverts = (videoProgress: number = 0) => {
   const video = flattenedSchedule[currentVideoIndex];
 
+  if (video.type === "ident" || !onAir) return;
+
+  const scheduleFromNow = flattenedSchedule
+    .slice(currentVideoIndex + 1)
+    .filter((item) => item.type === "video");
   const upcomingVideos: ScheduleVideo[] = [];
-  for (let i = 1; i <= 4; i++) {
-    const upcomingVideo = flattenedSchedule[currentVideoIndex + i];
+  for (let i = 0; i < 4; i++) {
+    const upcomingVideo = scheduleFromNow[i];
     if (isFirstForDay(upcomingVideo)) break;
     upcomingVideos.push(upcomingVideo);
   }
@@ -161,10 +174,16 @@ const deleteAdvert = () => {
 
 /////////////////////////////// VIDEO PLAYER ///////////////////////////////
 
-const currentVideoTitle = document.getElementById("current-video-title")!;
-
 let player: YT.Player | undefined;
-let onAir = true;
+
+const updateVideoTitle = () => {
+  const currentItem = flattenedSchedule[currentVideoIndex];
+  if (currentItem.type === "video" && onAir) {
+    videoFooter.innerHTML = `Currently playing: <span id="current-video-title">${currentItem.title}</span>`;
+  } else {
+    videoFooter.innerHTML = "";
+  }
+};
 
 function nextVideo(): void {
   currentVideoIndex++;
@@ -173,8 +192,7 @@ function nextVideo(): void {
   if (player) {
     player.loadVideoById(video.id, 0, "hd1080");
     player.unMute();
-    currentVideoTitle.textContent = video.title;
-
+    updateVideoTitle();
     prepareAdverts();
   }
 }
@@ -184,7 +202,7 @@ function offAirVideo(): void {
     player.loadVideoById(OFF_AIR_VIDEO_ID, 0, "hd1080");
     player.unMute();
     player.setLoop(true);
-    currentVideoTitle.textContent = "---";
+    updateVideoTitle();
   }
 
   // TODO - find way to switch back
@@ -193,6 +211,7 @@ function offAirVideo(): void {
 function stillBroadcasting(): boolean {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
+  console.log(currentHour);
   if (currentHour >= 0 && currentHour < 8) {
     const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
     const eightAmToday = getEightAmDate(currentTime).getTime();
@@ -240,12 +259,8 @@ function initPlayer(): void {
     },
   });
 
-  if (onAir) {
-    currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
-    prepareAdverts(videoProgress);
-  } else {
-    currentVideoTitle.textContent = "---";
-  }
+  updateVideoTitle();
+  prepareAdverts(videoProgress);
 }
 
 function onYouTubeIframeAPIReady(): void {

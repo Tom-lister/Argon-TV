@@ -2,69 +2,150 @@ import {
   LARGE_ITEM_PROBABILITIES,
   SEED,
   LONG_VIDEO_TIME,
-  SCHEDULE_LENGTH,
   SCHEDULE_START_TIME,
+  DAILY_RUNTIME,
 } from "./constants.js";
-import { formatTime, getEightAmDate } from "./utils.js";
-import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./database.js";
+import {
+  flattenProgramming,
+  flattenSchedule,
+  formatTime,
+  getEightAmDate,
+} from "./utils.js";
+import {
+  Video,
+  Group,
+  VIDEOS,
+  Tag,
+  Genre,
+  Cast,
+  Ident,
+  IDENTS,
+} from "./database.js";
 import { XORShift } from "random-seedable";
 
-export type ScheduleVideo = Video & {
-  type: "video";
-  startTime: number;
-};
-
-type ScheduleMarathon = {
+export type Marathon = {
   type: "marathon";
   title: string;
   attribute: Group | Tag | Cast;
-  videos: ScheduleVideo[];
+  videos: Video[];
 };
 
-type ScheduleItem = ScheduleVideo | ScheduleMarathon;
+export type ProgrammingItem = Video | Marathon;
 
-export const flattenSchedule = (schedule: ScheduleItem[]): ScheduleVideo[] =>
-  schedule.flatMap((item) => {
-    if ("id" in item) {
-      return [item];
-    }
-    return item.videos;
-  });
+export type ScheduleVideo = Video & {
+  startTime: number;
+};
+
+export type ScheduleMarathon = Omit<Marathon, "videos"> & {
+  videos: (ScheduleVideo | ScheduleIdent)[];
+};
+
+export type ScheduleIdent = Ident & {
+  startTime: number;
+};
+
+export type ScheduleItem = ScheduleVideo | ScheduleMarathon | ScheduleIdent;
+
+/////////////////////////////// GENERATION ///////////////////////////////
 
 const getWeightedVideoArray = (
   videos: Video[],
-  schedule: ScheduleItem[],
+  programming: ProgrammingItem[],
 ): Video[] => {
-  const flattenedSchedule = flattenSchedule(schedule);
-  flattenedSchedule.reverse();
+  const flattenedProgramming = flattenProgramming(programming);
+  flattenedProgramming.reverse();
 
   const weightedVideoArray: Video[] = [];
   for (const video of videos) {
-    const mostRecentIndex = flattenedSchedule.findIndex(
+    const mostRecentIndex = flattenedProgramming.findIndex(
       (item) => item.id === video.id,
     );
     const videoFrequency =
-      mostRecentIndex >= 0 ? mostRecentIndex : flattenedSchedule.length || 1;
+      mostRecentIndex >= 0 ? mostRecentIndex : flattenedProgramming.length || 1;
     weightedVideoArray.push(...Array(videoFrequency).fill(video));
   }
 
   return weightedVideoArray;
 };
 
+const getValidIdents = (
+  programming: ProgrammingItem[],
+  index: number,
+): Ident[] => {
+  const upcomingProgramming = programming.slice(index + 1);
+
+  const flattenedUpcomingProgramming = flattenProgramming(upcomingProgramming);
+
+  const nonPromotionalIdents = IDENTS.filter((ident) => !ident.promote);
+  const promotionalIdents = IDENTS.filter(
+    (ident) =>
+      ident.promote &&
+      flattenedUpcomingProgramming.some((item) => item.id === ident.promote),
+  );
+
+  const neighbouringVideos: Video[] = [];
+
+  const lastItem = index > 0 ? programming[index - 1] : undefined;
+  if (lastItem?.type === "video") {
+    neighbouringVideos.push(lastItem);
+  } else if (lastItem?.type === "marathon") {
+    neighbouringVideos.push(...lastItem.videos);
+  }
+
+  const nextItem = programming[index];
+  if (nextItem?.type === "video") {
+    neighbouringVideos.push(nextItem);
+  } else if (nextItem?.type === "marathon") {
+    neighbouringVideos.push(...nextItem.videos);
+  }
+
+  const validIdents = [
+    ...nonPromotionalIdents,
+    ...promotionalIdents.filter(
+      (ident) =>
+        !neighbouringVideos.some((video) => ident.avoid?.includes(video.id)),
+    ),
+  ];
+
+  return validIdents;
+};
+
+const getWeightedIdentArray = (
+  idents: Ident[],
+  identsSoFar: Ident[],
+): Ident[] => {
+  const reversedIdents = [...identsSoFar];
+  reversedIdents.reverse();
+
+  const weightedIdentArray: Ident[] = [];
+  for (const ident of idents) {
+    const mostRecentIndex = reversedIdents.findIndex(
+      (item) => item.id === ident.id,
+    );
+    const identFrequency =
+      mostRecentIndex >= 0 ? mostRecentIndex : reversedIdents.length || 1;
+    weightedIdentArray.push(...Array(identFrequency).fill(ident));
+  }
+
+  return weightedIdentArray;
+};
+
 const getWeightedAttributeArray = <T>(
   attributes: T[],
-  schedule: ScheduleItem[],
+  programming: ProgrammingItem[],
 ): T[] => {
-  const reversedSchedule = schedule.filter((item) => item.type === "marathon");
-  reversedSchedule.reverse();
+  const reversedProgramming = programming.filter(
+    (item) => item.type === "marathon",
+  );
+  reversedProgramming.reverse();
 
   const weightedAttributeArray: T[] = [];
   for (const attribute of attributes) {
-    const mostRecentIndex = reversedSchedule.findIndex(
+    const mostRecentIndex = reversedProgramming.findIndex(
       (item) => item.attribute === attribute,
     );
     const attributeFrequency =
-      mostRecentIndex >= 0 ? mostRecentIndex : reversedSchedule.length || 1;
+      mostRecentIndex >= 0 ? mostRecentIndex : reversedProgramming.length || 1;
     weightedAttributeArray.push(...Array(attributeFrequency).fill(attribute));
   }
 
@@ -84,9 +165,9 @@ const chooseMultiple = (videos: Video[], random: XORShift): Video[] => {
 };
 
 const createMarathon = (
-  videos: ScheduleVideo[],
+  videos: Video[],
   attribute: Group | Tag | Cast,
-): ScheduleMarathon => ({
+): Marathon => ({
   type: "marathon",
   title:
     videos.length == 2 ? `${attribute}: Back to Back` : `${attribute} Marathon`,
@@ -94,24 +175,95 @@ const createMarathon = (
   videos,
 });
 
-export const createSchedule = (startTime: number): ScheduleItem[] => {
-  const random = new XORShift(SEED);
+const getTotalProgrammingRuntime = (programming: ProgrammingItem[]): number => {
+  return programming.reduce((acc, item) => {
+    if ("videos" in item) {
+      return (
+        acc +
+        item.videos.reduce(
+          (videoAcc, video) => videoAcc + video.length * 1000,
+          0,
+        )
+      );
+    }
+    return acc + item.length * 1000;
+  }, 0);
+};
 
-  const schedule: ScheduleItem[] = [];
-  let timeUntilScheduleEnds = SCHEDULE_START_TIME - startTime;
-  let largeItemProbabilityIndex = 0;
+const convertProgrammingToSchedule = (
+  random: XORShift,
+  dayStartTime: number,
+  programming: ProgrammingItem[],
+  pastIdents: Ident[],
+): { schedule: ScheduleItem[]; overflowIndex: number } => {
+  let elapsedTime = 0;
+  let index = 0;
 
-  const formatVideoForSchedule = (video: Video): ScheduleVideo => {
-    const formattedVideo = {
-      type: "video" as const,
-      startTime: startTime + timeUntilScheduleEnds,
-      ...video,
-    };
-    timeUntilScheduleEnds += video.length * 1000;
-    return formattedVideo;
+  const dailySchedule: ScheduleItem[] = [];
+  const identsSoFar = [...pastIdents];
+
+  const addIdent = (schedule: ScheduleItem[]) => {
+    const validIdents = getValidIdents(programming, index);
+    if (validIdents.length) {
+      const weightedIdents = getWeightedIdentArray(validIdents, identsSoFar);
+      const randomIdent = random.choice(weightedIdents);
+      identsSoFar.push(randomIdent);
+      schedule.push({
+        ...randomIdent,
+        startTime: dayStartTime + elapsedTime,
+      });
+      elapsedTime += randomIdent.length * 1000;
+    }
   };
 
-  while (timeUntilScheduleEnds < SCHEDULE_LENGTH) {
+  while (index < programming.length && elapsedTime < DAILY_RUNTIME) {
+    const item = programming[index];
+
+    if (item.type === "video") {
+      if (index > 0) addIdent(dailySchedule);
+
+      dailySchedule.push({
+        ...item,
+        startTime: dayStartTime + elapsedTime,
+      });
+      elapsedTime += item.length * 1000;
+    } else {
+      const marathonItems: (ScheduleVideo | ScheduleIdent)[] = [];
+
+      let needsIndent = index > 0;
+
+      for (const video of item.videos) {
+        if (needsIndent) {
+          addIdent(marathonItems);
+        }
+        needsIndent = true;
+
+        marathonItems.push({
+          ...video,
+          startTime: dayStartTime + elapsedTime,
+        });
+        elapsedTime += video.length * 1000;
+      }
+
+      dailySchedule.push({
+        ...item,
+        videos: marathonItems,
+      });
+    }
+    index++;
+  }
+
+  return { schedule: dailySchedule, overflowIndex: index };
+};
+
+const createDailyProgramming = (
+  random: XORShift,
+  pastProgramming: ProgrammingItem[],
+  spillover: ProgrammingItem[],
+): ProgrammingItem[] => {
+  const programming: ProgrammingItem[] = spillover;
+  let largeItemProbabilityIndex = 0;
+  while (getTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
     const largeItem =
       random.float() < LARGE_ITEM_PROBABILITIES[largeItemProbabilityIndex];
 
@@ -129,70 +281,63 @@ export const createSchedule = (startTime: number): ScheduleItem[] => {
 
       switch (largeItemType) {
         case "castMarathon":
-          const weightedCasts = getWeightedAttributeArray(
-            Object.values(Cast),
-            schedule,
-          );
+          const weightedCasts = getWeightedAttributeArray(Object.values(Cast), [
+            ...pastProgramming,
+            ...programming,
+          ]);
           const randomCast = random.choice(weightedCasts);
           const videosWithCast = VIDEOS.filter((video) =>
             video.cast?.includes(randomCast),
           );
-          const weightedCastVideos = getWeightedVideoArray(
-            videosWithCast,
-            schedule,
-          );
+          const weightedCastVideos = getWeightedVideoArray(videosWithCast, [
+            ...pastProgramming,
+            ...programming,
+          ]);
           const randomCastVideos = chooseMultiple(weightedCastVideos, random);
-          const castMarathonVideos = randomCastVideos.map(
-            formatVideoForSchedule,
-          );
-          schedule.push(createMarathon(castMarathonVideos, randomCast));
+          programming.push(createMarathon(randomCastVideos, randomCast));
           break;
         case "tagMarathon":
-          const weightedTags = getWeightedAttributeArray(
-            Object.values(Tag),
-            schedule,
-          );
+          const weightedTags = getWeightedAttributeArray(Object.values(Tag), [
+            ...pastProgramming,
+            ...programming,
+          ]);
           const randomTag = random.choice(weightedTags);
           const videosWithTag = VIDEOS.filter((video) =>
             video.tags?.includes(randomTag),
           );
-          const weightedTagVideos = getWeightedVideoArray(
-            videosWithTag,
-            schedule,
-          );
+          const weightedTagVideos = getWeightedVideoArray(videosWithTag, [
+            ...pastProgramming,
+            ...programming,
+          ]);
           const randomTagVideos = chooseMultiple(weightedTagVideos, random);
-          const tagMarathonVideos = randomTagVideos.map(formatVideoForSchedule);
-          schedule.push(createMarathon(tagMarathonVideos, randomTag));
+          programming.push(createMarathon(randomTagVideos, randomTag));
           break;
         case "groupMarathon":
           const weightedGroups = getWeightedAttributeArray(
             Object.values(Group),
-            schedule,
+            [...pastProgramming, ...programming],
           );
           const randomGroup = random.choice(weightedGroups);
           const videosWithGroup = VIDEOS.filter(
             (video) => video.group === randomGroup,
           );
           videosWithGroup.reverse();
-          const groupMarathonVideos = videosWithGroup.map(
-            formatVideoForSchedule,
-          );
-          schedule.push(createMarathon(groupMarathonVideos, randomGroup));
+          programming.push(createMarathon(videosWithGroup, randomGroup));
           break;
         case "longVideo":
           const longVideos = VIDEOS.filter(
             (video) => video.length >= LONG_VIDEO_TIME,
           );
-          const weightedLongVideos = getWeightedVideoArray(
-            longVideos,
-            schedule,
-          );
+          const weightedLongVideos = getWeightedVideoArray(longVideos, [
+            ...pastProgramming,
+            ...programming,
+          ]);
           const randomLongVideo = random.choice(weightedLongVideos);
-          schedule.push(formatVideoForSchedule(randomLongVideo));
+          programming.push(randomLongVideo);
           break;
       }
     } else {
-      // Get single video
+      // Get short video
 
       largeItemProbabilityIndex++;
 
@@ -201,152 +346,150 @@ export const createSchedule = (startTime: number): ScheduleItem[] => {
           video.genre !== Genre.Update && video.length < LONG_VIDEO_TIME,
       );
 
-      const weightedVideos = getWeightedVideoArray(filteredVideos, schedule);
+      const weightedVideos = getWeightedVideoArray(filteredVideos, [
+        ...pastProgramming,
+        ...programming,
+      ]);
 
       const randomVideo = random.choice(weightedVideos);
-      schedule.push(formatVideoForSchedule(randomVideo));
-    }
-
-    const currentTime = new Date(startTime + timeUntilScheduleEnds);
-    const currentTimeOfDay = currentTime.getHours();
-
-    if (currentTimeOfDay >= 0 && currentTimeOfDay < 8) {
-      // Pause at midnight, resume at 8am
-      const eightAmSameDay = getEightAmDate(currentTime);
-      timeUntilScheduleEnds = eightAmSameDay.getTime() - startTime;
+      programming.push(randomVideo);
     }
   }
 
-  return schedule;
+  return programming;
 };
 
-export const displaySchedule = (schedule: ScheduleItem[]) => {
+export const createSchedule = (loadTime: number): ScheduleItem[] => {
+  const random = new XORShift(SEED);
+
+  const daysSinceScheduleStart = Math.ceil(
+    (loadTime - SCHEDULE_START_TIME) / (1000 * 60 * 60 * 24),
+  );
+
+  const daysToCreate = daysSinceScheduleStart + 3;
+
+  const fullSchedule: ScheduleItem[] = [];
+  const pastProgramming: ProgrammingItem[] = [];
+  let spillover: ProgrammingItem[] = [];
+
+  for (let i = 0; i < daysToCreate; i++) {
+    const programming = createDailyProgramming(
+      random,
+      pastProgramming,
+      spillover,
+    );
+
+    const pastIdents = flattenSchedule(fullSchedule).filter(
+      (item) => item.type === "ident",
+    );
+
+    const dayStartTime = SCHEDULE_START_TIME + i * 1000 * 60 * 60 * 24;
+
+    const { schedule, overflowIndex } = convertProgrammingToSchedule(
+      random,
+      dayStartTime,
+      programming,
+      pastIdents,
+    );
+
+    fullSchedule.push(...schedule);
+    pastProgramming.push(...programming.slice(0, overflowIndex));
+    spillover = programming.slice(overflowIndex);
+  }
+
+  return fullSchedule;
+};
+
+/////////////////////////////// DISPLAY ///////////////////////////////
+
+const displayDailySchedule = (schedule: ScheduleItem[], table: HTMLElement) => {
+  schedule.forEach((item) => {
+    if (item.type === "ident") return;
+
+    const row = document.createElement("tr");
+
+    if (item.type === "video") {
+      const timeCell = document.createElement("td");
+      timeCell.textContent = formatTime(item.startTime);
+      row.appendChild(timeCell);
+
+      const titleCell = document.createElement("td");
+      titleCell.textContent = item.title;
+      row.appendChild(titleCell);
+
+      if (item.genre === Genre.Special || item.length >= LONG_VIDEO_TIME) {
+        row.classList.add("large-video");
+      }
+      if (item.genre === Genre.Trailer) {
+        row.classList.add("trailer");
+      }
+    } else {
+      const marathonCell = document.createElement("td");
+      marathonCell.setAttribute("colspan", "2");
+
+      const marathonBox = document.createElement("div");
+      marathonBox.classList.add("marathon-box");
+
+      const marathonTitle = document.createElement("p");
+      marathonTitle.textContent = item.title;
+      marathonBox.appendChild(marathonTitle);
+
+      const marathonTable = document.createElement("table");
+      item.videos.forEach((video) => {
+        if (video.type === "ident") return;
+
+        const videoRow = document.createElement("tr");
+
+        const videoTimeCell = document.createElement("td");
+        videoTimeCell.textContent = formatTime(video.startTime);
+        videoRow.appendChild(videoTimeCell);
+
+        const videoTitleCell = document.createElement("td");
+        videoTitleCell.textContent = video.title;
+        videoRow.appendChild(videoTitleCell);
+
+        marathonTable.appendChild(videoRow);
+      });
+      marathonBox.appendChild(marathonTable);
+
+      marathonCell.appendChild(marathonBox);
+      row.appendChild(marathonCell);
+    }
+    table.appendChild(row);
+  });
+};
+
+export const displaySchedule = (schedule: ScheduleItem[], loadTime: number) => {
   const todayTable = document.getElementById("today-schedule")!;
 
-  const now = new Date();
+  const now = new Date(loadTime);
   const eightAmToday = getEightAmDate(now).getTime();
   const eightAmNextMorning = getEightAmDate(now, 1).getTime();
   const eightAmNextDay = getEightAmDate(now, 2).getTime();
 
   const todaySchedule = schedule.filter((item) =>
-    item.type === "video"
-      ? item.startTime >= eightAmToday && item.startTime < eightAmNextMorning
-      : item.videos.some(
+    item.type === "marathon"
+      ? item.videos.some(
           (video) =>
             video.startTime >= eightAmToday &&
             video.startTime < eightAmNextMorning,
-        ),
+        )
+      : item.startTime >= eightAmToday && item.startTime < eightAmNextMorning,
   );
 
-  todaySchedule.forEach((item) => {
-    const row = document.createElement("tr");
-    if (item.type === "video") {
-      const timeCell = document.createElement("td");
-      timeCell.textContent = formatTime(item.startTime);
-      row.appendChild(timeCell);
-
-      const titleCell = document.createElement("td");
-      titleCell.textContent = item.title;
-      row.appendChild(titleCell);
-
-      if (item.genre === Genre.Special || item.length >= LONG_VIDEO_TIME) {
-        row.classList.add("large-video");
-      }
-      if (item.genre === Genre.Trailer) {
-        row.classList.add("trailer");
-      }
-    } else {
-      const marathonCell = document.createElement("td");
-      marathonCell.setAttribute("colspan", "2");
-
-      const marathonBox = document.createElement("div");
-      marathonBox.classList.add("marathon-box");
-
-      const marathonTitle = document.createElement("p");
-      marathonTitle.textContent = item.title;
-      marathonBox.appendChild(marathonTitle);
-
-      const marathonTable = document.createElement("table");
-      item.videos.forEach((video) => {
-        const videoRow = document.createElement("tr");
-
-        const videoTimeCell = document.createElement("td");
-        videoTimeCell.textContent = formatTime(video.startTime);
-        videoRow.appendChild(videoTimeCell);
-
-        const videoTitleCell = document.createElement("td");
-        videoTitleCell.textContent = video.title;
-        videoRow.appendChild(videoTitleCell);
-
-        marathonTable.appendChild(videoRow);
-      });
-      marathonBox.appendChild(marathonTable);
-
-      marathonCell.appendChild(marathonBox);
-      row.appendChild(marathonCell);
-    }
-    todayTable.appendChild(row);
-  });
+  displayDailySchedule(todaySchedule, todayTable);
 
   const tomorrowTable = document.getElementById("tomorrow-schedule")!;
 
   const tomorrowSchedule = schedule.filter((item) =>
-    item.type === "video"
-      ? item.startTime >= eightAmNextMorning && item.startTime < eightAmNextDay
-      : item.videos.some(
+    item.type === "marathon"
+      ? item.videos.some(
           (video) =>
             video.startTime >= eightAmNextMorning &&
             video.startTime < eightAmNextDay,
-        ),
+        )
+      : item.startTime >= eightAmNextMorning && item.startTime < eightAmNextDay,
   );
 
-  tomorrowSchedule.forEach((item) => {
-    const row = document.createElement("tr");
-    if (item.type === "video") {
-      const timeCell = document.createElement("td");
-      timeCell.textContent = formatTime(item.startTime);
-      row.appendChild(timeCell);
-
-      const titleCell = document.createElement("td");
-      titleCell.textContent = item.title;
-      row.appendChild(titleCell);
-
-      if (item.genre === Genre.Special || item.length >= LONG_VIDEO_TIME) {
-        row.classList.add("large-video");
-      }
-      if (item.genre === Genre.Trailer) {
-        row.classList.add("trailer");
-      }
-    } else {
-      const marathonCell = document.createElement("td");
-      marathonCell.setAttribute("colspan", "2");
-
-      const marathonBox = document.createElement("div");
-      marathonBox.classList.add("marathon-box");
-
-      const marathonTitle = document.createElement("p");
-      marathonTitle.textContent = item.title;
-      marathonBox.appendChild(marathonTitle);
-
-      const marathonTable = document.createElement("table");
-      item.videos.forEach((video) => {
-        const videoRow = document.createElement("tr");
-
-        const videoTimeCell = document.createElement("td");
-        videoTimeCell.textContent = formatTime(video.startTime);
-        videoRow.appendChild(videoTimeCell);
-
-        const videoTitleCell = document.createElement("td");
-        videoTitleCell.textContent = video.title;
-        videoRow.appendChild(videoTitleCell);
-
-        marathonTable.appendChild(videoRow);
-      });
-      marathonBox.appendChild(marathonTable);
-
-      marathonCell.appendChild(marathonBox);
-      row.appendChild(marathonCell);
-    }
-    tomorrowTable.appendChild(row);
-  });
+  displayDailySchedule(tomorrowSchedule, tomorrowTable);
 };
