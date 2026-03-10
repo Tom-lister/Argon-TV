@@ -1,11 +1,12 @@
 import {
   LARGE_ITEM_PROBABILITIES,
+  SEED,
   LONG_VIDEO_TIME,
   SCHEDULE_LENGTH,
   SCHEDULE_START_TIME,
 } from "./constants.js";
 import { formatTime, getEightAmDate } from "./utils.js";
-import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./videos.js";
+import { Video, Group, VIDEOS, Tag, Genre, Cast } from "./database.js";
 import { XORShift } from "random-seedable";
 
 export type ScheduleVideo = Video & {
@@ -94,7 +95,7 @@ const createMarathon = (
 });
 
 export const createSchedule = (startTime: number): ScheduleItem[] => {
-  const random = new XORShift(123456789);
+  const random = new XORShift(SEED);
 
   const schedule: ScheduleItem[] = [];
   let timeUntilScheduleEnds = SCHEDULE_START_TIME - startTime;

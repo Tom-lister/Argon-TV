@@ -1130,3 +1130,19 @@ export const VIDEOS: Video[] = [
     channel: Channel.AleksanderMarkovic,
   },
 ];
+
+export type Ident = {
+  id: string;
+  length: number;
+  avoid?: string[];
+  promote?: string;
+};
+
+export const IDENTS: Ident[] = [
+  {
+    // Ego Death
+    id: "_2S_kGOtD5w",
+    length: 10,
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  },
+];

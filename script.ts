@@ -1,4 +1,4 @@
-import { LONG_VIDEO_TIME } from "./constants.js";
+import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID } from "./constants.js";
 import {
   createSchedule,
   displaySchedule,
@@ -6,11 +6,11 @@ import {
   ScheduleVideo,
 } from "./schedule.js";
 import { formatTime, getEightAmDate, isFirstForDay } from "./utils.js";
-import { Genre, Video } from "./videos.js";
+import { Genre } from "./database.js";
 
 /////////////////////////////// SCHEDULE ///////////////////////////////
 
-let startTime = Date.now();
+const startTime = Date.now();
 
 const schedule = createSchedule(startTime);
 
@@ -65,40 +65,38 @@ const prepareAdverts = (videoProgress: number = 0) => {
     upcomingVideos.push(upcomingVideo);
   }
 
-  const timeLeftInVideo = video.length - videoProgress;
-
   if (
     upcomingVideos.length > 0 &&
     video.genre !== Genre.Trailer &&
-    timeLeftInVideo >= 45
+    video.length >= 45
   ) {
-    if (timeLeftInVideo >= LONG_VIDEO_TIME) {
+    if (video.length >= LONG_VIDEO_TIME) {
       const advertProps1 = getAdvertData(upcomingVideos);
       const advertProps2 = getAdvertData(upcomingVideos);
 
-      const halfwayThroughVideo = timeLeftInVideo / 2;
+      const halfwayThroughVideo = video.length / 2;
 
-      const minAdvertWait1 = 20;
-      const maxAdvertWait1 = halfwayThroughVideo - 20;
-      const advertWait1 =
-        minAdvertWait1 + Math.random() * (maxAdvertWait1 - minAdvertWait1);
+      const advertTimestamp1 = (3 * halfwayThroughVideo) / 4;
+      const advertTimestamp2 = halfwayThroughVideo + advertTimestamp1;
 
-      const minAdvertWait2 = halfwayThroughVideo + 20;
-      const maxAdvertWait2 = timeLeftInVideo - 20;
-      const advertWait2 =
-        minAdvertWait2 + Math.random() * (maxAdvertWait2 - minAdvertWait2);
+      const advertWait1 = advertTimestamp1 - videoProgress;
+      const advertWait2 = advertTimestamp2 - videoProgress;
 
-      setTimeout(() => showAdvert(advertProps1), advertWait1 * 1000);
-      setTimeout(() => showAdvert(advertProps2), advertWait2 * 1000);
+      if (advertWait1 > 0) {
+        setTimeout(() => showAdvert(advertProps1), advertWait1 * 1000);
+      }
+      if (advertWait2 > 0) {
+        setTimeout(() => showAdvert(advertProps2), advertWait2 * 1000);
+      }
     } else {
       const advertProps = getAdvertData(upcomingVideos);
 
-      const minAdvertWait = 20;
-      const maxAdvertWait = timeLeftInVideo - 20;
-      const advertWait =
-        minAdvertWait + Math.random() * (maxAdvertWait - minAdvertWait);
+      const advertTimestamp = (3 * video.length) / 4;
+      const advertWait = advertTimestamp - videoProgress;
 
-      setTimeout(() => showAdvert(advertProps), advertWait * 1000);
+      if (advertWait > 0) {
+        setTimeout(() => showAdvert(advertProps), advertWait * 1000);
+      }
     }
   }
 };
@@ -172,8 +170,8 @@ function nextVideo(): void {
   currentVideoIndex++;
   const video = flattenedSchedule[currentVideoIndex];
 
-  if (player && player.loadVideoById) {
-    player.loadVideoById(video.id, 0, "highres");
+  if (player) {
+    player.loadVideoById(video.id, 0, "hd1080");
     player.unMute();
     currentVideoTitle.textContent = video.title;
 
@@ -182,40 +180,55 @@ function nextVideo(): void {
 }
 
 function offAirVideo(): void {
-  // TODO
+  if (player) {
+    player.loadVideoById(OFF_AIR_VIDEO_ID, 0, "hd1080");
+    player.unMute();
+    player.setLoop(true);
+    currentVideoTitle.textContent = "---";
+  }
+
+  // TODO - find way to switch back
+}
+
+function stillBroadcasting(): boolean {
+  const currentTime = new Date();
+  const currentHour = currentTime.getHours();
+  if (currentHour >= 0 && currentHour < 8) {
+    const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
+    const eightAmToday = getEightAmDate(currentTime).getTime();
+    if (nextVideoTime === eightAmToday) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function initPlayer(): void {
   const videoProgress = Math.floor(firstVideoStartTime / 1000);
 
+  onAir = stillBroadcasting();
+  // TODO - find way to switch back
+
   player = new YT.Player("yt-player", {
-    videoId: flattenedSchedule[currentVideoIndex].id,
+    videoId: onAir ? flattenedSchedule[currentVideoIndex].id : OFF_AIR_VIDEO_ID,
     playerVars: {
       autoplay: 1,
-      loop: 0,
+      loop: onAir ? 0 : 1,
       mute: 1,
       controls: 0,
       showinfo: 0,
       rel: 0,
-      start: videoProgress,
+      // TODO - consistent progress through off-air video
+      start: onAir ? videoProgress : 0,
     },
     events: {
       onReady(event: YT.PlayerEvent) {
-        event.target.setPlaybackQuality("highres");
+        event.target.setPlaybackQuality("hd1080");
       },
       onStateChange(event: YT.OnStateChangeEvent) {
         if (event.data === YT.PlayerState.ENDED) {
           // Check if we've stopped broadcasting for the day
-          const currentTime = new Date();
-          const currentHour = currentTime.getHours();
-          if (currentHour >= 0 && currentHour < 8) {
-            const nextVideoTime =
-              flattenedSchedule[currentVideoIndex + 1].startTime;
-            const eightAmToday = getEightAmDate(currentTime).getTime();
-            if (nextVideoTime === eightAmToday) {
-              onAir = false;
-            }
-          }
+          onAir = stillBroadcasting();
 
           if (onAir) {
             nextVideo();
@@ -226,8 +239,13 @@ function initPlayer(): void {
       },
     },
   });
-  currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
-  prepareAdverts(videoProgress);
+
+  if (onAir) {
+    currentVideoTitle.textContent = flattenedSchedule[currentVideoIndex].title;
+    prepareAdverts(videoProgress);
+  } else {
+    currentVideoTitle.textContent = "---";
+  }
 }
 
 function onYouTubeIframeAPIReady(): void {
