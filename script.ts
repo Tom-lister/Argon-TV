@@ -1,12 +1,12 @@
 import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID } from "./constants.js";
+import { Genre } from "./database.js";
 import { createSchedule, displaySchedule, ScheduleVideo } from "./schedule.js";
 import {
+  flattenSchedule,
   formatTime,
   getEightAmDate,
   isFirstForDay,
-  flattenSchedule,
 } from "./utils.js";
-import { Genre } from "./database.js";
 
 const videoFooter = document.getElementById("video-footer")!;
 let onAir = true;
@@ -77,13 +77,13 @@ const prepareAdverts = (videoProgress: number = 0) => {
   if (
     upcomingVideos.length > 0 &&
     video.genre !== Genre.Trailer &&
-    video.length >= 45
+    (video.endTime ?? video.length) >= 45
   ) {
-    if (video.length >= LONG_VIDEO_TIME) {
+    if ((video.endTime ?? video.length) >= LONG_VIDEO_TIME) {
       const advertProps1 = getAdvertData(upcomingVideos);
       const advertProps2 = getAdvertData(upcomingVideos);
 
-      const halfwayThroughVideo = video.length / 2;
+      const halfwayThroughVideo = (video.endTime ?? video.length) / 2;
 
       const advertTimestamp1 = (3 * halfwayThroughVideo) / 4;
       const advertTimestamp2 = halfwayThroughVideo + advertTimestamp1;
@@ -100,7 +100,7 @@ const prepareAdverts = (videoProgress: number = 0) => {
     } else {
       const advertProps = getAdvertData(upcomingVideos);
 
-      const advertTimestamp = (3 * video.length) / 4;
+      const advertTimestamp = (3 * (video.endTime ?? video.length)) / 4;
       const advertWait = advertTimestamp - videoProgress;
 
       if (advertWait > 0) {
@@ -248,6 +248,11 @@ function nextVideo(): void {
     prepareIdentText();
     clearIdentText();
   }
+
+  // Skip endcards etc
+  if ("endTime" in video && video.endTime) {
+    setTimeout(nextVideo, video.endTime * 1000);
+  }
 }
 
 function offAirVideo(): void {
@@ -258,7 +263,7 @@ function offAirVideo(): void {
     updateVideoTitle();
   }
 
-  // TODO - find way to switch back
+  // TODO - find way to switch back (calling nextVideo at the right time should work)
 }
 
 function stillBroadcasting(): boolean {
@@ -276,13 +281,14 @@ function stillBroadcasting(): boolean {
 }
 
 function initPlayer(): void {
+  const currentItem = flattenedSchedule[currentVideoIndex];
+
   const videoProgress = Math.floor(firstVideoStartTime / 1000);
 
   onAir = stillBroadcasting();
-  // TODO - find way to switch back
 
   player = new YT.Player("yt-player", {
-    videoId: onAir ? flattenedSchedule[currentVideoIndex].id : OFF_AIR_VIDEO_ID,
+    videoId: onAir ? currentItem.id : OFF_AIR_VIDEO_ID,
     playerVars: {
       autoplay: 1,
       loop: onAir ? 0 : 1,
@@ -313,8 +319,19 @@ function initPlayer(): void {
   });
 
   updateVideoTitle();
-  prepareAdverts(videoProgress);
-  prepareIdentText(videoProgress);
+
+  if (onAir) {
+    prepareAdverts(videoProgress);
+    prepareIdentText(videoProgress);
+
+    // Skip endcards etc
+    if ("endTime" in currentItem && currentItem.endTime) {
+      const timeUntilEnd = (currentItem.endTime - videoProgress) * 1000;
+      setTimeout(nextVideo, timeUntilEnd);
+    }
+  } else {
+    // TODO - find way to switch back (calling nextVideo at the right time should work)
+  }
 }
 
 function onYouTubeIframeAPIReady(): void {

@@ -1,9 +1,3 @@
-// TYPE: video, special, trailer, update
-// CAST: array of cast members
-// GROUP: ordered group (e.g. Bob & Mike)
-// TAGS: unordered groups (e.g. Tom's House, Classic Video)
-// CHANNEL: where vid was uploaded
-
 export enum Genre {
   Video = "video",
   Special = "special",
@@ -11,6 +5,7 @@ export enum Genre {
   Update = "update",
 }
 
+// ordered group (e.g. Bob & Mike)
 export enum Group {
   BobAndMike = "Bob & Mike",
   RyansWackyWorld = "Ryan's Wacky World",
@@ -25,6 +20,7 @@ export enum Group {
   InDepthDocumentaries = "In-Depth Documentaries",
 }
 
+// unordered groups (e.g. Tom's House, Classic Video)
 export enum Tag {
   Animation = "Animation",
   BFI = "BFI",
@@ -65,6 +61,7 @@ export type Video = {
   id: string;
   title: string;
   length: number;
+  endTime?: number;
   genre: Genre;
   group?: Group;
   tags?: Tag[];
@@ -631,6 +628,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "k1YssBA4MtU",
     title: "Antipsychosis",
@@ -684,6 +682,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "uawg7MAD3gA",
     title: "The Bread Man: The Depraved Adventures of Bob & Mike, Part II",
@@ -694,6 +693,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "L5-A__dkgKM",
     title: "The Car: The Depraved Adventures of Bob & Mike, Part I",
@@ -718,6 +718,7 @@ export const VIDEOS: Video[] = [
     id: "MDk94MlYpSM",
     title: "THE TRUTH ABOUT 5G - The MadD G Show",
     length: 647,
+    endTime: 626.5,
     genre: Genre.Video,
     tags: [Tag.MadDG],
     channel: Channel.ArgonFilms,
@@ -727,6 +728,7 @@ export const VIDEOS: Video[] = [
     id: "itWurrJ-Klc",
     title: "ATTACK OF THE NAZI NAZIS",
     length: 240,
+    endTime: 199,
     genre: Genre.Video,
     cast: [Cast.Blaise, Cast.Aleks, Cast.Jake],
     channel: Channel.ArgonFilms,
@@ -752,6 +754,7 @@ export const VIDEOS: Video[] = [
     id: "CPKOPic-GLI",
     title: "A Sketch That Does Not Contain The Final Accommodation",
     length: 312,
+    endTime: 290,
     genre: Genre.Video,
     group: Group.AccommodationSeries,
     cast: [Cast.Tom, Cast.Riley],
@@ -762,6 +765,7 @@ export const VIDEOS: Video[] = [
     id: "fkirWoHf7r0",
     title: "FINAL ACCOMMODATION'S LAW",
     length: 436,
+    endTime: 411.5,
     genre: Genre.Video,
     group: Group.TheLawSeries,
     tags: [Tag.Rooftop],
@@ -810,6 +814,7 @@ export const VIDEOS: Video[] = [
     id: "uBuTW49B_Zc",
     title: "Vaccines & Violence - An In-depth Documentary",
     length: 369,
+    endTime: 353,
     genre: Genre.Video,
     group: Group.InDepthDocumentaries,
     cast: [Cast.Abdi],
@@ -820,16 +825,19 @@ export const VIDEOS: Video[] = [
     id: "opQ0VKLAYdg",
     title: "Is Chicken Even Real? - An In-Depth Documentary",
     length: 452,
+    endTime: 413.5,
     genre: Genre.Video,
     group: Group.InDepthDocumentaries,
     cast: [Cast.Abdi],
     channel: Channel.ArgonFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "I3fJmOtakp4",
     title: "Inception 9: Jerry Seinfeld Yiffs the Planet",
     length: 211,
+    endTime: 197,
     genre: Genre.Video,
     group: Group.AccommodationSeries,
     tags: [Tag.BFI],
@@ -924,7 +932,7 @@ export const VIDEOS: Video[] = [
     id: "MjZOLHgMl_w",
     title: "The Passage - Official Trailer",
     length: 26,
-    genre: Genre.Video,
+    genre: Genre.Trailer,
     tags: [Tag.BFI],
     channel: Channel.ArgonFilms,
   },
@@ -979,11 +987,13 @@ export const VIDEOS: Video[] = [
     channel: Channel.ArgonFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "M_hcemMrsvs",
     title:
       "HEISTWARS: PATTERSON RISES | The Greatest Challenge Yet (Feat: Eric Roberts)",
     length: 2860,
+    endTime: 2849.36,
     genre: Genre.Video,
     channel: Channel.GyroFilms,
   },
@@ -992,6 +1002,7 @@ export const VIDEOS: Video[] = [
     id: "6Ar5XfCA_H4",
     title: "IMPORTANT ANOUNCEMENT",
     length: 52,
+    endTime: 41,
     genre: Genre.Update,
     channel: Channel.GyroFilms,
   },
@@ -1000,10 +1011,12 @@ export const VIDEOS: Video[] = [
     id: "AsvA6Wzkoxw",
     title: "HEISTWARS: THE RESCUE | Sweets, Surveillance, and Stupidity",
     length: 1959,
+    endTime: 1936.6,
     genre: Genre.Video,
     channel: Channel.GyroFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "YzAQwxhMluM",
     title: "HEISTWARS: REDUX | New Target, New Teams, New Rules...",
@@ -1016,6 +1029,7 @@ export const VIDEOS: Video[] = [
     id: "qcORfqlcjFY",
     title: "HEISTWARS | Simulation-Based Game Show",
     length: 1632,
+    endTime: 1610.5,
     genre: Genre.Video,
     channel: Channel.GyroFilms,
   },
@@ -1050,6 +1064,7 @@ export const VIDEOS: Video[] = [
     id: "vmrLapxoeag",
     title: "THE WITNESS | Short mystery-thriller film",
     length: 712,
+    endTime: 691,
     genre: Genre.Video,
     cast: [Cast.Tom, Cast.Blaise, Cast.Aleks],
     channel: Channel.GyroFilms,
@@ -1059,6 +1074,7 @@ export const VIDEOS: Video[] = [
     id: "zYYqwoxmnkg",
     title: "The Final Accommodation - Trailer",
     length: 88,
+    endTime: 67,
     genre: Genre.Trailer,
     channel: Channel.GyroFilms,
   },
@@ -1067,6 +1083,7 @@ export const VIDEOS: Video[] = [
     id: "UjGqf_coU_U",
     title: "THE UNETHICALS | Behind The Scenes",
     length: 476,
+    endTime: 455.75,
     genre: Genre.Video,
     group: Group.TheUnethicals,
     tags: [Tag.TomHouse, Tag.Documentary],
@@ -1095,6 +1112,7 @@ export const VIDEOS: Video[] = [
     id: "lXIacRj9ssw",
     title: "A video which is exactly two minutes long",
     length: 167,
+    endTime: 146,
     genre: Genre.Video,
     tags: [Tag.BFI],
     cast: [Cast.Johnson],
@@ -1105,6 +1123,7 @@ export const VIDEOS: Video[] = [
     id: "1Kt1n8VkomU",
     title: "A sketch that does not contain the letter Z",
     length: 182,
+    endTime: 160.65,
     genre: Genre.Video,
     tags: [Tag.BFI],
     cast: [Cast.Angus, Cast.Tom],
@@ -1121,6 +1140,7 @@ export const VIDEOS: Video[] = [
     channel: Channel.GyroFilms,
   },
   {
+    // Endcard + credits
     type: "video",
     id: "TqKg8RAD8sU",
     title: "Temporary accommodation",
@@ -1164,6 +1184,7 @@ export const VIDEOS: Video[] = [
     id: "_eT5EcqZPyA",
     title: "CHAIRS",
     length: 249,
+    endTime: 241,
     tags: [Tag.BFI],
     genre: Genre.Video,
     cast: [Cast.Tom, Cast.Jake],

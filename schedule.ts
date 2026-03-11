@@ -1,27 +1,27 @@
+import { XORShift } from "random-seedable";
 import {
+  DAILY_RUNTIME,
   LARGE_ITEM_PROBABILITIES,
-  SEED,
   LONG_VIDEO_TIME,
   SCHEDULE_START_TIME,
-  DAILY_RUNTIME,
+  SEED,
 } from "./constants.js";
+import {
+  Cast,
+  Genre,
+  Group,
+  Ident,
+  IDENTS,
+  Tag,
+  Video,
+  VIDEOS,
+} from "./database.js";
 import {
   flattenProgramming,
   flattenSchedule,
   formatTime,
   getEightAmDate,
 } from "./utils.js";
-import {
-  Video,
-  Group,
-  VIDEOS,
-  Tag,
-  Genre,
-  Cast,
-  Ident,
-  IDENTS,
-} from "./database.js";
-import { XORShift } from "random-seedable";
 
 export type Marathon = {
   type: "marathon";
@@ -188,12 +188,13 @@ const getTotalProgrammingRuntime = (programming: ProgrammingItem[]): number => {
       return (
         acc +
         item.videos.reduce(
-          (videoAcc, video) => videoAcc + video.length * 1000,
+          (videoAcc, video) =>
+            videoAcc + (video.endTime ?? video.length) * 1000,
           0,
         )
       );
     }
-    return acc + item.length * 1000;
+    return acc + (item.endTime ?? item.length) * 1000;
   }, 0);
 };
 
@@ -233,7 +234,7 @@ const convertProgrammingToSchedule = (
         ...item,
         startTime: dayStartTime + elapsedTime,
       });
-      elapsedTime += item.length * 1000;
+      elapsedTime += (item.endTime ?? item.length) * 1000;
     } else {
       const marathonItems: (ScheduleVideo | ScheduleIdent)[] = [];
 
@@ -249,7 +250,7 @@ const convertProgrammingToSchedule = (
           ...video,
           startTime: dayStartTime + elapsedTime,
         });
-        elapsedTime += video.length * 1000;
+        elapsedTime += (video.endTime ?? video.length) * 1000;
       }
 
       dailySchedule.push({
@@ -268,6 +269,11 @@ const createDailyProgramming = (
   pastProgramming: ProgrammingItem[],
   spillover: ProgrammingItem[],
 ): ProgrammingItem[] => {
+  const AVAILABLE_VIDEOS = VIDEOS.filter(
+    // TODO - system to add/remove videos after certain dates
+    (video) => video.genre !== Genre.Update,
+  );
+
   const programming: ProgrammingItem[] = spillover;
   let largeItemProbabilityIndex = 0;
   while (getTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
@@ -293,7 +299,7 @@ const createDailyProgramming = (
             ...programming,
           ]);
           const randomCast = random.choice(weightedCasts);
-          const videosWithCast = VIDEOS.filter((video) =>
+          const videosWithCast = AVAILABLE_VIDEOS.filter((video) =>
             video.cast?.includes(randomCast),
           );
           const weightedCastVideos = getWeightedVideoArray(videosWithCast, [
@@ -309,7 +315,7 @@ const createDailyProgramming = (
             ...programming,
           ]);
           const randomTag = random.choice(weightedTags);
-          const videosWithTag = VIDEOS.filter((video) =>
+          const videosWithTag = AVAILABLE_VIDEOS.filter((video) =>
             video.tags?.includes(randomTag),
           );
           const weightedTagVideos = getWeightedVideoArray(videosWithTag, [
@@ -325,14 +331,14 @@ const createDailyProgramming = (
             [...pastProgramming, ...programming],
           );
           const randomGroup = random.choice(weightedGroups);
-          const videosWithGroup = VIDEOS.filter(
+          const videosWithGroup = AVAILABLE_VIDEOS.filter(
             (video) => video.group === randomGroup,
           );
           videosWithGroup.reverse();
           programming.push(createMarathon(videosWithGroup, randomGroup));
           break;
         case "longVideo":
-          const longVideos = VIDEOS.filter(
+          const longVideos = AVAILABLE_VIDEOS.filter(
             (video) => video.length >= LONG_VIDEO_TIME,
           );
           const weightedLongVideos = getWeightedVideoArray(longVideos, [
@@ -348,9 +354,8 @@ const createDailyProgramming = (
 
       largeItemProbabilityIndex++;
 
-      const filteredVideos = VIDEOS.filter(
-        (video) =>
-          video.genre !== Genre.Update && video.length < LONG_VIDEO_TIME,
+      const filteredVideos = AVAILABLE_VIDEOS.filter(
+        (video) => video.length < LONG_VIDEO_TIME,
       );
 
       const weightedVideos = getWeightedVideoArray(filteredVideos, [
