@@ -182,20 +182,21 @@ const createMarathon = (
   videos,
 });
 
-const getTotalProgrammingRuntime = (programming: ProgrammingItem[]): number => {
+const estimateTotalProgrammingRuntime = (programming: ProgrammingItem[]): number => {
+  const averageIdentLength = IDENTS.reduce((acc, ident) => acc + ident.length * 1000, 0) / IDENTS.length;
   return programming.reduce((acc, item) => {
     if ("videos" in item) {
       return (
         acc +
         item.videos.reduce(
           (videoAcc, video) =>
-            videoAcc + (video.endTime ?? video.length) * 1000,
+            videoAcc + (video.endTime ?? video.length) * 1000 + averageIdentLength,
           0,
         )
       );
     }
-    return acc + (item.endTime ?? item.length) * 1000;
-  }, 0);
+    return acc + (item.endTime ?? item.length) * 1000 + averageIdentLength;
+  }, -averageIdentLength);
 };
 
 const convertProgrammingToSchedule = (
@@ -276,7 +277,7 @@ const createDailyProgramming = (
 
   const programming: ProgrammingItem[] = spillover;
   let largeItemProbabilityIndex = 0;
-  while (getTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
+  while (estimateTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
     const largeItem =
       random.float() < LARGE_ITEM_PROBABILITIES[largeItemProbabilityIndex];
 
