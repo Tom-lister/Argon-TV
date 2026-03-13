@@ -268,20 +268,9 @@ function offAirVideo(): void {
   setTimeout(nextVideo, timeUntilNextVideo);
 }
 
-function stillBroadcasting(videoProgress: number = 0): boolean {
-  // TODO - remove
-  if (videoProgress ===0) return false;
-
-  const currentVideo = flattenedSchedule[currentVideoIndex];
-  if (currentVideo.type === "ident") return true;
-
-  if (videoProgress > (currentVideo.endTime ?? currentVideo.length)) {
-    return false;
-  }
-
+function stillBroadcasting(): boolean {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
-  console.log(currentHour);
   if (currentHour >= 0 && currentHour < 8) {
     const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
     const eightAmToday = getEightAmDate(currentTime).getTime();
@@ -299,7 +288,9 @@ function initPlayer(): void {
   const videoProgress = Math.floor(firstVideoStartTime / 1000);
 
   // Check if we've stopped broadcasting for the day
-  onAir = stillBroadcasting(videoProgress);
+  onAir = 
+    currentItem.type === "ident" ||
+    videoProgress < (currentItem.endTime ?? currentItem.length);
 
   player = new YT.Player("yt-player", {
     videoId: onAir ? currentItem.id : OFF_AIR_VIDEO_ID,
@@ -324,11 +315,9 @@ function initPlayer(): void {
 
           if (onAir) {
             nextVideo();
-          } else {
-            if (wasOnAir) {
-              offAirVideo();
-            } else player!.playVideo();
-          }
+          } else if (wasOnAir) {
+            offAirVideo();
+          } else player!.playVideo();
         }
       },
     },
