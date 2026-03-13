@@ -204,7 +204,7 @@ const convertProgrammingToSchedule = (
   dayStartTime: number,
   programming: ProgrammingItem[],
   pastIdents: Ident[],
-): { schedule: ScheduleItem[]; overflowIndex: number } => {
+): ScheduleItem[] => {
   let elapsedTime = 0;
   let index = 0;
 
@@ -225,7 +225,7 @@ const convertProgrammingToSchedule = (
     }
   };
 
-  while (index < programming.length && elapsedTime < DAILY_RUNTIME) {
+  while (index < programming.length) {
     const item = programming[index];
 
     if (item.type === "video") {
@@ -262,20 +262,19 @@ const convertProgrammingToSchedule = (
     index++;
   }
 
-  return { schedule: dailySchedule, overflowIndex: index };
+  return dailySchedule;
 };
 
 const createDailyProgramming = (
   random: XORShift,
   pastProgramming: ProgrammingItem[],
-  spillover: ProgrammingItem[],
 ): ProgrammingItem[] => {
   const AVAILABLE_VIDEOS = VIDEOS.filter(
     // TODO - system to add/remove videos after certain dates
     (video) => video.genre !== Genre.Update,
   );
 
-  const programming: ProgrammingItem[] = spillover;
+  const programming: ProgrammingItem[] = [];
   let largeItemProbabilityIndex = 0;
   while (estimateTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
     const largeItem =
@@ -384,13 +383,11 @@ export const createSchedule = (
 
   const fullSchedule: ScheduleItem[] = [];
   const pastProgramming: ProgrammingItem[] = [];
-  let spillover: ProgrammingItem[] = [];
 
   for (let i = 0; i < daysToCreate; i++) {
     const programming = createDailyProgramming(
       random,
       pastProgramming,
-      spillover,
     );
 
     const pastIdents = flattenSchedule(fullSchedule).filter(
@@ -399,7 +396,7 @@ export const createSchedule = (
 
     const dayStartTime = SCHEDULE_START_TIME + i * 1000 * 60 * 60 * 24;
 
-    const { schedule, overflowIndex } = convertProgrammingToSchedule(
+    const schedule = convertProgrammingToSchedule(
       random,
       dayStartTime,
       programming,
@@ -407,8 +404,7 @@ export const createSchedule = (
     );
 
     fullSchedule.push(...schedule);
-    pastProgramming.push(...programming.slice(0, overflowIndex));
-    spillover = programming.slice(overflowIndex);
+    pastProgramming.push(...programming);
   }
 
   return fullSchedule;
