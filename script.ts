@@ -237,6 +237,7 @@ const updateVideoTitle = () => {
 };
 
 function nextVideo(): void {
+  onAir = true;
   currentVideoIndex++;
   const video = flattenedSchedule[currentVideoIndex];
 
@@ -259,20 +260,32 @@ function nextVideo(): void {
 function offAirVideo(): void {
   if (player) {
     player.loadVideoById(OFF_AIR_VIDEO_ID, 0, "hd1080");
-    player.unMute();
-    player.setLoop(true);
     updateVideoTitle();
   }
 
-  // TODO - find way to switch back (calling nextVideo at the right time should work)
+  const timeUntilNextVideo = flattenedSchedule[currentVideoIndex + 1].startTime - Date.now();
+
+  setTimeout(nextVideo, timeUntilNextVideo);
 }
 
-function stillBroadcasting(): boolean {
+function stillBroadcasting(videoProgress: number = 0): boolean {
+  // TODO - remove
+  if (videoProgress ===0) return false;
+
+  const currentVideo = flattenedSchedule[currentVideoIndex];
+  if (currentVideo.type === "ident") return true;
+
+  if (videoProgress > (currentVideo.endTime ?? currentVideo.length)) {
+    return false;
+  }
+
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
+  console.log(currentHour);
   if (currentHour >= 0 && currentHour < 8) {
     const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
     const eightAmToday = getEightAmDate(currentTime).getTime();
+
     if (nextVideoTime === eightAmToday) {
       return false;
     }
@@ -285,18 +298,18 @@ function initPlayer(): void {
 
   const videoProgress = Math.floor(firstVideoStartTime / 1000);
 
-  onAir = stillBroadcasting();
+  // Check if we've stopped broadcasting for the day
+  onAir = stillBroadcasting(videoProgress);
 
   player = new YT.Player("yt-player", {
     videoId: onAir ? currentItem.id : OFF_AIR_VIDEO_ID,
     playerVars: {
       autoplay: 1,
-      loop: onAir ? 0 : 1,
+      loop: 0,
       mute: 1,
       controls: 0,
       showinfo: 0,
       rel: 0,
-      // TODO - consistent progress through off-air video
       start: onAir ? videoProgress : 0,
     },
     events: {
@@ -305,13 +318,16 @@ function initPlayer(): void {
       },
       onStateChange(event: YT.OnStateChangeEvent) {
         if (event.data === YT.PlayerState.ENDED) {
+          const wasOnAir = onAir;
           // Check if we've stopped broadcasting for the day
           onAir = stillBroadcasting();
 
           if (onAir) {
             nextVideo();
           } else {
-            offAirVideo();
+            if (wasOnAir) {
+              offAirVideo();
+            } else player!.playVideo();
           }
         }
       },
@@ -329,7 +345,9 @@ function initPlayer(): void {
       setTimeout(nextVideo, timeUntilEnd);
     }
   } else {
-    // TODO - find way to switch back (calling nextVideo at the right time should work)
+    const timeUntilNextVideo = flattenedSchedule[currentVideoIndex + 1].startTime - Date.now();
+  
+    setTimeout(nextVideo, timeUntilNextVideo);
   }
 }
 
