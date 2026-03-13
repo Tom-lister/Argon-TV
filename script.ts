@@ -1,4 +1,5 @@
-import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID } from "./constants.js";
+import { XORShift } from "random-seedable";
+import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID, SEED } from "./constants.js";
 import { Genre } from "./database.js";
 import { createSchedule, displaySchedule, ScheduleVideo } from "./schedule.js";
 import {
@@ -8,6 +9,8 @@ import {
   isFirstForDay,
 } from "./utils.js";
 
+const random = new XORShift(SEED);
+
 const videoFooter = document.getElementById("video-footer")!;
 let onAir = true;
 
@@ -15,7 +18,7 @@ let onAir = true;
 
 const loadTime = Date.now();
 
-const schedule = createSchedule(loadTime);
+const schedule = createSchedule(random, loadTime);
 
 const flattenedSchedule = flattenSchedule(schedule);
 
@@ -37,14 +40,13 @@ type AdvertData = {
   time: string;
 };
 
-// TODO - use seeded random
 const getAdvertData = (upcomingVideos: ScheduleVideo[]) => {
   const nextVideo = upcomingVideos[0];
   const nonImmediateVideos = upcomingVideos.slice(1);
 
   const promoteSpecial =
     nonImmediateVideos.some((video) => video.genre === Genre.Special) &&
-    Math.random() < 0.5;
+    random.float() < 0.5;
 
   const videoToUse = promoteSpecial
     ? nonImmediateVideos.find((video) => video.genre === Genre.Special)!
@@ -184,8 +186,6 @@ const prepareIdentText = (videoProgress: number = 0) => {
       .slice(currentVideoIndex + 1)
       .find((item) => item.id === video.promote?.id);
 
-    console.log(flattenedSchedule.slice(currentVideoIndex + 1));
-
     const identWait = video.promote.textAppear + 0.7 - videoProgress;
 
     if (promoteVideo && "title" in promoteVideo && identWait > 0) {
@@ -244,9 +244,10 @@ function nextVideo(): void {
     player.loadVideoById(video.id, 0, "hd1080");
     player.unMute();
     updateVideoTitle();
+    clearIdentText();
+
     prepareAdverts();
     prepareIdentText();
-    clearIdentText();
   }
 
   // Skip endcards etc
@@ -269,7 +270,6 @@ function offAirVideo(): void {
 function stillBroadcasting(): boolean {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
-  console.log(currentHour);
   if (currentHour >= 0 && currentHour < 8) {
     const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
     const eightAmToday = getEightAmDate(currentTime).getTime();
@@ -324,7 +324,6 @@ function initPlayer(): void {
     prepareAdverts(videoProgress);
     prepareIdentText(videoProgress);
 
-    // Skip endcards etc
     if ("endTime" in currentItem && currentItem.endTime) {
       const timeUntilEnd = (currentItem.endTime - videoProgress) * 1000;
       setTimeout(nextVideo, timeUntilEnd);

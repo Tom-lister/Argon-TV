@@ -371,9 +371,10 @@ const createDailyProgramming = (
   return programming;
 };
 
-export const createSchedule = (loadTime: number): ScheduleItem[] => {
-  const random = new XORShift(SEED);
-
+export const createSchedule = (
+  random: XORShift,
+  loadTime: number,
+): ScheduleItem[] => {
   const daysSinceScheduleStart = Math.ceil(
     (loadTime - SCHEDULE_START_TIME) / (1000 * 60 * 60 * 24),
   );

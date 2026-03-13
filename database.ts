@@ -69,7 +69,6 @@ export type Video = {
   channel: Channel;
 };
 
-// TODO - cut out endcards
 export const VIDEOS: Video[] = [
   {
     type: "video",
@@ -990,8 +989,7 @@ export const VIDEOS: Video[] = [
     // Endcard + credits
     type: "video",
     id: "M_hcemMrsvs",
-    title:
-      "HEISTWARS: PATTERSON RISES | The Greatest Challenge Yet (Feat: Eric Roberts)",
+    title: "HEISTWARS: PATTERSON RISES (Feat: Eric Roberts)",
     length: 2860,
     endTime: 2849.36,
     genre: Genre.Video,
@@ -1009,7 +1007,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "AsvA6Wzkoxw",
-    title: "HEISTWARS: THE RESCUE | Sweets, Surveillance, and Stupidity",
+    title: "HEISTWARS: THE RESCUE",
     length: 1959,
     endTime: 1936.6,
     genre: Genre.Video,
@@ -1019,7 +1017,7 @@ export const VIDEOS: Video[] = [
     // Endcard + credits
     type: "video",
     id: "YzAQwxhMluM",
-    title: "HEISTWARS: REDUX | New Target, New Teams, New Rules...",
+    title: "HEISTWARS: REDUX",
     length: 2440,
     genre: Genre.Video,
     channel: Channel.GyroFilms,
@@ -1036,7 +1034,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "6n0UVlYlQ1c",
-    title: "HEISTWARS | Trailer (Experimental Game Show)",
+    title: "HEISTWARS - Trailer",
     length: 74,
     genre: Genre.Trailer,
     channel: Channel.GyroFilms,
@@ -1053,7 +1051,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "tkEslxHHSfA",
-    title: "THE WITNESS | Linear version",
+    title: "THE WITNESS - Linear version",
     length: 461,
     genre: Genre.Video,
     cast: [Cast.Tom, Cast.Blaise, Cast.Aleks],
@@ -1062,7 +1060,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "vmrLapxoeag",
-    title: "THE WITNESS | Short mystery-thriller film",
+    title: "THE WITNESS",
     length: 712,
     endTime: 691,
     genre: Genre.Video,
@@ -1081,7 +1079,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "UjGqf_coU_U",
-    title: "THE UNETHICALS | Behind The Scenes",
+    title: "THE UNETHICALS - Behind The Scenes",
     length: 476,
     endTime: 455.75,
     genre: Genre.Video,
@@ -1093,7 +1091,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "afBR-UHN4hk",
-    title: "THE UNETHICALS | Short Action-Comedy Film",
+    title: "THE UNETHICALS",
     length: 2053,
     genre: Genre.Video,
     group: Group.TheUnethicals,
@@ -1102,7 +1100,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "hNYqeHSXAnQ",
-    title: "THE UNETHICALS | Trailer",
+    title: "THE UNETHICALS - Trailer",
     length: 113,
     genre: Genre.Trailer,
     channel: Channel.GyroFilms,
@@ -1132,7 +1130,7 @@ export const VIDEOS: Video[] = [
   {
     type: "video",
     id: "Y8pKMBZkfBo",
-    title: "THE UNETHICALS | Concept trailer",
+    title: "THE UNETHICALS - Concept trailer",
     length: 151,
     genre: Genre.Trailer,
     tags: [Tag.BFI],
@@ -1331,4 +1329,18 @@ export const IDENTS: Ident[] = [
       textAppear: 11.6,
     },
   },
+  {
+    // Ghost fight
+    type: "ident",
+    id: "1emUg3XrPMI",
+    length: 16,
+    avoid: ["fkirWoHf7r0","CPKOPic-GLI"],
+  },
+  {
+    // Tram hit
+    type: "ident",
+    id: "isMe88cNg_U",
+    length: 17,
+    avoid: ["fkirWoHf7r0","CPKOPic-GLI"],
+  }
 ];

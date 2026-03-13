@@ -1,5 +1,15 @@
 /* TODO - hide scrollbar */
 
+html,
+body {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   background-color: #000000;
   font-family:
