@@ -47,6 +47,8 @@ body {
 
 #splash-screen p {
   margin: 0;
+  margin-left: 6vw;
+  margin-right: 6vw;
   color: #0bcc71;
   font-size: 80px;
   font-family: "Fixedsys";
@@ -70,113 +72,28 @@ body {
 
 #above-schedule {
   height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 #argon-logo {
   height: 12vh;
   margin: auto;
   display: block;
-  margin-top: 15px;
-  margin-bottom: 22px;
-}
-
-#video-footer {
-  color: #a3a3a3;
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 20px;
-  margin-top: 22px;
-}
-
-#current-video-title {
-  color: #ffffff;
-}
-
-#schedule-indicator {
-  color: #a3a3a3;
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 0px;
-  margin-top: 26px;
-}
-
-#down-arrow {
-  height: 2vh;
-  margin: auto;
-  display: block;
-  margin-bottom: 14px;
-  opacity: 0.8;
-}
-
-#schedule-container {
-  display: flex;
-  justify-content: center;
-  gap: 5%;
-  margin: 0 auto;
-  margin-bottom: 75px;
-}
-
-.daily-schedule {
-  width: 100%;
-  max-width: 30%;
-}
-
-.daily-schedule > p {
-  color: #ffffff;
-  font-size: 28px;
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-table {
-  padding: 0;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-}
-
-td {
-  padding-left: 6px;
-  vertical-align: text-top;
-  margin: 0;
-  color: #ffffff;
-}
-
-.large-video td {
-  font-size: 20px;
-  color: #0bcc71;
-}
-
-.trailer td {
-  color: #ffffffbb;
-}
-
-.marathon-box {
-  border: 1px solid #0bcc71;
-  padding: 8px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 8px;
-  width: fit-content;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.marathon-box p {
-  margin: 0;
-  font-size: 20px;
-}
-
-.marathon-box table {
-  width: auto;
+  margin-top: 1vh;
+  margin-bottom: 2vh;
 }
 
 #video-container {
-  height: 68vh;
+  width: min(100%, 70vh * 16 / 9);
   aspect-ratio: 16 / 9;
   overflow: hidden;
   position: relative;
   margin: 0 auto;
+  margin-top: auto;
+  margin-bottom: auto;
   border: 2px solid #0bcc71;
+  box-sizing: border-box;
 }
 
 #video-container #yt-player,
@@ -187,7 +104,10 @@ td {
   top: -60px;
   left: 0;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   height: calc(100% + 120px);
+  box-sizing: border-box;
 }
 #video-foreground {
   pointer-events: none;
@@ -325,4 +245,116 @@ td {
 #ident-text > p:nth-child(2) {
   color: #ffffff;
   font-size: 48px;
+}
+
+#video-footer {
+  color: #a3a3a3;
+  text-align: center;
+  font-size: 30px;
+  margin: 0;
+  margin-top: 2vh;
+  margin-bottom: 0.5vh;
+}
+
+#current-video-title {
+  color: #ffffff;
+}
+
+#schedule-indicator {
+  color: #a3a3a3;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 0px;
+  margin-top: 3vh;
+}
+
+#down-arrow {
+  height: 2vh;
+  margin: auto;
+  display: block;
+  margin-bottom: 14px;
+  opacity: 0.8;
+}
+
+#schedule-container {
+  display: flex;
+  justify-content: center;
+  gap: 5%;
+  margin: 0 auto;
+  margin-bottom: 75px;
+}
+
+.daily-schedule {
+  width: 100%;
+  max-width: 30%;
+}
+
+@media (max-width: 650px) {
+  .daily-schedule {
+    max-width: 90%;
+  }
+  #schedule-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 10%;
+  }
+}
+
+@media (max-height: 400px) {
+  #video-footer {
+    font-size: 20px;
+  }
+
+  #schedule-indicator {
+    font-size: 14px;
+  }
+}
+
+.daily-schedule > p {
+  color: #ffffff;
+  font-size: 28px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+table {
+  padding: 0;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+td {
+  padding-left: 6px;
+  vertical-align: text-top;
+  margin: 0;
+  color: #ffffff;
+}
+
+.large-video td {
+  font-size: 20px;
+  color: #0bcc71;
+}
+
+.trailer td {
+  color: #ffffffbb;
+}
+
+.marathon-box {
+  border: 1px solid #0bcc71;
+  padding: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 8px;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.marathon-box p {
+  margin: 0;
+  font-size: 20px;
+}
+
+.marathon-box table {
+  width: auto;
 }

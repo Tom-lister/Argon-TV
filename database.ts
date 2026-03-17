@@ -33,6 +33,7 @@ export enum Tag {
   JakeVideo = "Filmfreak",
   Documentary = "Documentary",
   WeeklyYear = "2022",
+  Gaming = "Gaming",
 }
 
 export enum Cast {
@@ -54,6 +55,7 @@ export enum Channel {
   BFIFamilyFilms = "BFI Family Films",
   JakeFilmFreak = "Jake Filmfreak",
   AleksanderMarkovic = "Aleksander Marković",
+  PercyVader = "PercyVader",
 }
 
 export type Video = {
@@ -213,7 +215,7 @@ export const VIDEOS: Video[] = [
       "SCARIEST GMOD NEXTBOT EVER??? SCARIEST UNKNOWN CREATURE IN GMOD??? [JUMPSCARE WARNING] (Scary)",
     length: 135,
     genre: Genre.Video,
-    tags: [Tag.GMOD, Tag.WeeklyYear],
+    tags: [Tag.GMOD, Tag.WeeklyYear, Tag.Gaming],
     channel: Channel.ArgonFilms,
   },
   {
@@ -407,7 +409,7 @@ export const VIDEOS: Video[] = [
     title: "SCARIEST GMOD ARG EVER??????? (REAL)",
     length: 258,
     genre: Genre.Video,
-    tags: [Tag.GMOD, Tag.WeeklyYear],
+    tags: [Tag.GMOD, Tag.WeeklyYear, Tag.Gaming],
     channel: Channel.ArgonFilms,
   },
   {
@@ -543,7 +545,7 @@ export const VIDEOS: Video[] = [
     title: "AMATEUR LABS - Interview With Map Creator",
     length: 295,
     genre: Genre.Video,
-    tags: [Tag.PercyHouse, Tag.WeeklyYear],
+    tags: [Tag.PercyHouse, Tag.WeeklyYear, Tag.Gaming],
     channel: Channel.ArgonFilms,
   },
   {
@@ -942,7 +944,7 @@ export const VIDEOS: Video[] = [
     length: 256,
     genre: Genre.Video,
     group: Group.EducationalContent,
-    tags: [Tag.GMOD],
+    tags: [Tag.GMOD, Tag.Gaming],
     channel: Channel.ArgonFilms,
   },
   {
@@ -952,7 +954,7 @@ export const VIDEOS: Video[] = [
     length: 213,
     genre: Genre.Video,
     group: Group.EducationalContent,
-    tags: [Tag.GMOD],
+    tags: [Tag.GMOD, Tag.Gaming],
     channel: Channel.ArgonFilms,
   },
   {
@@ -1274,6 +1276,15 @@ export const VIDEOS: Video[] = [
     genre: Genre.Video,
     cast: [Cast.Blaise, Cast.Aleks],
     channel: Channel.AleksanderMarkovic,
+  },
+  {
+    type: "video",
+    id: "d2hdOHSUeQQ",
+    title: "The Tower - Cool New Minecraft Map!",
+    length: 1476,
+    genre: Genre.Video,
+    tags: [Tag.Gaming],
+    channel: Channel.PercyVader,
   },
 ];
 

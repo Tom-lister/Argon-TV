@@ -305,6 +305,7 @@ function initPlayer(): void {
     },
     events: {
       onReady(event: YT.PlayerEvent) {
+        event.target.setVolume(50);
         event.target.setPlaybackQuality("hd1080");
       },
       onStateChange(event: YT.OnStateChangeEvent) {
