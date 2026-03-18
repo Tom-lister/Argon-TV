@@ -32,6 +32,8 @@ const firstVideoStartTime =
 
 displaySchedule(schedule, loadTime);
 
+console.log(flattenedSchedule.slice(currentVideoIndex - 6));
+
 /////////////////////////////// ADVERT ///////////////////////////////
 
 type AdvertData = {
@@ -232,7 +234,8 @@ const updateVideoTitle = () => {
   if (currentItem.type === "video" && onAir) {
     videoFooter.innerHTML = `Currently playing: <span id="current-video-title">${currentItem.title}</span>`;
   } else {
-    videoFooter.innerHTML = "";
+    videoFooter.innerHTML =
+      "<span id='black-video-text'>Subscribe to Argon Films</span>";
   }
 };
 
@@ -263,7 +266,8 @@ function offAirVideo(): void {
     updateVideoTitle();
   }
 
-  const timeUntilNextVideo = flattenedSchedule[currentVideoIndex + 1].startTime - Date.now();
+  const timeUntilNextVideo =
+    flattenedSchedule[currentVideoIndex + 1].startTime - Date.now();
 
   setTimeout(nextVideo, timeUntilNextVideo);
 }
@@ -288,7 +292,7 @@ function initPlayer(): void {
   const videoProgress = Math.floor(firstVideoStartTime / 1000);
 
   // Check if we've stopped broadcasting for the day
-  onAir = 
+  onAir =
     currentItem.type === "ident" ||
     videoProgress < (currentItem.endTime ?? currentItem.length);
 
@@ -335,8 +339,9 @@ function initPlayer(): void {
       setTimeout(nextVideo, timeUntilEnd);
     }
   } else {
-    const timeUntilNextVideo = flattenedSchedule[currentVideoIndex + 1].startTime - Date.now();
-  
+    const timeUntilNextVideo =
+      flattenedSchedule[currentVideoIndex + 1].startTime - Date.now();
+
     setTimeout(nextVideo, timeUntilNextVideo);
   }
 }

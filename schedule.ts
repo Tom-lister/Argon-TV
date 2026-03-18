@@ -101,18 +101,15 @@ const getValidIdents = (
     neighbouringVideos.push(...nextItem.videos);
   }
 
-  const validIdents = [
-    ...nonPromotionalIdents,
-    ...promotionalIdents.filter(
-      (ident) =>
-        !neighbouringVideos.some(
-          (video) =>
-            ident.avoid?.includes(video.id) ||
-            // Don't promote if it's up next
-            ident.promote?.id === video.id,
-        ),
-    ),
-  ];
+  const validIdents = [...nonPromotionalIdents, ...promotionalIdents].filter(
+    (ident) =>
+      !neighbouringVideos.some(
+        (video) =>
+          ident.avoid?.includes(video.id) ||
+          // Don't promote if it's up next
+          ident.promote?.id === video.id,
+      ),
+  );
 
   return validIdents;
 };
@@ -130,7 +127,7 @@ const getWeightedIdentArray = (
       (item) => item.id === ident.id,
     );
     const identFrequency =
-      mostRecentIndex > 0 ? mostRecentIndex : reversedIdents.length || 1;
+      mostRecentIndex >= 0 ? mostRecentIndex : reversedIdents.length || 1;
     weightedIdentArray.push(...Array(identFrequency).fill(ident));
   }
 
@@ -182,15 +179,20 @@ const createMarathon = (
   videos,
 });
 
-const estimateTotalProgrammingRuntime = (programming: ProgrammingItem[]): number => {
-  const averageIdentLength = IDENTS.reduce((acc, ident) => acc + ident.length * 1000, 0) / IDENTS.length;
+const estimateTotalProgrammingRuntime = (
+  programming: ProgrammingItem[],
+): number => {
+  const averageIdentLength =
+    IDENTS.reduce((acc, ident) => acc + ident.length * 1000, 0) / IDENTS.length;
   return programming.reduce((acc, item) => {
     if ("videos" in item) {
       return (
         acc +
         item.videos.reduce(
           (videoAcc, video) =>
-            videoAcc + (video.endTime ?? video.length) * 1000 + averageIdentLength,
+            videoAcc +
+            (video.endTime ?? video.length) * 1000 +
+            averageIdentLength,
           0,
         )
       );
@@ -228,8 +230,10 @@ const convertProgrammingToSchedule = (
   while (index < programming.length) {
     const item = programming[index];
 
+    let needsIndent = index > 0;
+
     if (item.type === "video") {
-      if (index > 0) addIdent(dailySchedule);
+      if (needsIndent) addIdent(dailySchedule);
 
       dailySchedule.push({
         ...item,
@@ -238,8 +242,6 @@ const convertProgrammingToSchedule = (
       elapsedTime += (item.endTime ?? item.length) * 1000;
     } else {
       const marathonItems: (ScheduleVideo | ScheduleIdent)[] = [];
-
-      let needsIndent = index > 0;
 
       for (const video of item.videos) {
         if (needsIndent) {
@@ -385,10 +387,7 @@ export const createSchedule = (
   const pastProgramming: ProgrammingItem[] = [];
 
   for (let i = 0; i < daysToCreate; i++) {
-    const programming = createDailyProgramming(
-      random,
-      pastProgramming,
-    );
+    const programming = createDailyProgramming(random, pastProgramming);
 
     const pastIdents = flattenSchedule(fullSchedule).filter(
       (item) => item.type === "ident",

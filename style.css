@@ -260,6 +260,10 @@ body {
   color: #ffffff;
 }
 
+#black-video-text {
+  color: #000000;
+}
+
 #schedule-indicator {
   color: #a3a3a3;
   text-align: center;
