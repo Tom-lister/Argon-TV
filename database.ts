@@ -1345,13 +1345,20 @@ export const IDENTS: Ident[] = [
     type: "ident",
     id: "1emUg3XrPMI",
     length: 16,
-    avoid: ["fkirWoHf7r0","CPKOPic-GLI"],
+    avoid: ["fkirWoHf7r0", "CPKOPic-GLI"],
   },
   {
     // Tram hit
     type: "ident",
     id: "isMe88cNg_U",
     length: 17,
-    avoid: ["fkirWoHf7r0","CPKOPic-GLI"],
-  }
+    avoid: ["fkirWoHf7r0", "CPKOPic-GLI"],
+  },
+  {
+    // Terrorist
+    type: "ident",
+    id: "bti8s09vPmM",
+    length: 9,
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  },
 ];
