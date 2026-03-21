@@ -5,7 +5,7 @@ export enum Genre {
   Update = "update",
 }
 
-// ordered group (e.g. Bob & Mike)
+// ordered collection
 export enum Group {
   BobAndMike = "Bob & Mike",
   RyansWackyWorld = "Ryan's Wacky World",
@@ -20,7 +20,7 @@ export enum Group {
   InDepthDocumentaries = "In-Depth Documentaries",
 }
 
-// unordered groups (e.g. Tom's House, Classic Video)
+// unordered collection
 export enum Tag {
   Animation = "Animation",
   BFI = "BFI",
@@ -1357,8 +1357,15 @@ export const IDENTS: Ident[] = [
   {
     // Terrorist
     type: "ident",
-    id: "bti8s09vPmM",
+    id: "QKNApSrNSHc",
     length: 9,
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  },
+  {
+    // Tweedles
+    type: "ident",
+    id: "o3uyJN5MEGA",
+    length: 20,
     avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
   },
 ];
