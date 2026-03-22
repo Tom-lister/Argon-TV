@@ -69,6 +69,8 @@ export type Video = {
   tags?: Tag[];
   cast?: Cast[];
   channel: Channel;
+  enterRotation?: number; //midnight on first day of rotation
+  exitRotation?: number; //midnight on first day of exclusion
 };
 
 export const VIDEOS: Video[] = [
@@ -1298,6 +1300,8 @@ export type Ident = {
     title: string;
     textAppear: number;
   };
+  enterRotation?: number; //midnight on first day of rotation
+  exitRotation?: number; //midnight on first day of exclusion
 };
 
 export const IDENTS: Ident[] = [
@@ -1307,6 +1311,12 @@ export const IDENTS: Ident[] = [
     id: "_2S_kGOtD5w",
     length: 10,
     avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  },
+  {
+    // Unethicals 2
+    type: "ident",
+    id: "wxMJM-h9cbE",
+    length: 6,
   },
   {
     // Surreal

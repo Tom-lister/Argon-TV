@@ -48,6 +48,41 @@ export type ScheduleItem = ScheduleVideo | ScheduleMarathon | ScheduleIdent;
 
 /////////////////////////////// GENERATION ///////////////////////////////
 
+const getAvailableVideos = (dayStartTime: number): Video[] => {
+  const currentTime = new Date(dayStartTime);
+  const startOfDay = new Date(
+    currentTime.getFullYear(),
+    currentTime.getMonth(),
+    currentTime.getDate(),
+  );
+
+  return VIDEOS.filter((video) => video.genre !== Genre.Update)
+    .filter(
+      (video) =>
+        !video.enterRotation || video.enterRotation <= startOfDay.getTime(),
+    )
+    .filter(
+      (video) =>
+        !video.exitRotation || video.exitRotation > startOfDay.getTime(),
+    );
+};
+
+const getAvailableIdents = (dayStartTime: number): Ident[] => {
+  const currentTime = new Date(dayStartTime);
+  const startOfDay = new Date(
+    currentTime.getFullYear(),
+    currentTime.getMonth(),
+    currentTime.getDate(),
+  );
+
+  return IDENTS.filter(
+    (ident) =>
+      !ident.enterRotation || ident.enterRotation <= startOfDay.getTime(),
+  ).filter(
+    (ident) => !ident.exitRotation || ident.exitRotation > startOfDay.getTime(),
+  );
+};
+
 const getWeightedVideoArray = (
   videos: Video[],
   programming: ProgrammingItem[],
@@ -69,6 +104,7 @@ const getWeightedVideoArray = (
 };
 
 const getValidIdents = (
+  availableIdents: Ident[],
   programming: ProgrammingItem[],
   index: number,
 ): Ident[] => {
@@ -76,8 +112,10 @@ const getValidIdents = (
 
   const flattenedUpcomingProgramming = flattenProgramming(upcomingProgramming);
 
-  const nonPromotionalIdents = IDENTS.filter((ident) => !ident.promote);
-  const promotionalIdents = IDENTS.filter(
+  const nonPromotionalIdents = availableIdents.filter(
+    (ident) => !ident.promote,
+  );
+  const promotionalIdents = availableIdents.filter(
     (ident) =>
       ident.promote &&
       flattenedUpcomingProgramming.some(
@@ -213,8 +251,10 @@ const convertProgrammingToSchedule = (
   const dailySchedule: ScheduleItem[] = [];
   const identsSoFar = [...pastIdents];
 
+  const availableIdents = getAvailableIdents(dayStartTime);
+
   const addIdent = (schedule: ScheduleItem[]) => {
-    const validIdents = getValidIdents(programming, index);
+    const validIdents = getValidIdents(availableIdents, programming, index);
     if (validIdents.length) {
       const weightedIdents = getWeightedIdentArray(validIdents, identsSoFar);
       const randomIdent = random.choice(weightedIdents);
@@ -269,13 +309,9 @@ const convertProgrammingToSchedule = (
 
 const createDailyProgramming = (
   random: XORShift,
+  availableVideos: Video[],
   pastProgramming: ProgrammingItem[],
 ): ProgrammingItem[] => {
-  const AVAILABLE_VIDEOS = VIDEOS.filter(
-    // TODO - system to add/remove videos after certain dates
-    (video) => video.genre !== Genre.Update,
-  );
-
   const programming: ProgrammingItem[] = [];
   let largeItemProbabilityIndex = 0;
   while (estimateTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
@@ -301,7 +337,7 @@ const createDailyProgramming = (
             ...programming,
           ]);
           const randomCast = random.choice(weightedCasts);
-          const videosWithCast = AVAILABLE_VIDEOS.filter((video) =>
+          const videosWithCast = availableVideos.filter((video) =>
             video.cast?.includes(randomCast),
           );
           const weightedCastVideos = getWeightedVideoArray(videosWithCast, [
@@ -317,7 +353,7 @@ const createDailyProgramming = (
             ...programming,
           ]);
           const randomTag = random.choice(weightedTags);
-          const videosWithTag = AVAILABLE_VIDEOS.filter((video) =>
+          const videosWithTag = availableVideos.filter((video) =>
             video.tags?.includes(randomTag),
           );
           const weightedTagVideos = getWeightedVideoArray(videosWithTag, [
@@ -333,14 +369,14 @@ const createDailyProgramming = (
             [...pastProgramming, ...programming],
           );
           const randomGroup = random.choice(weightedGroups);
-          const videosWithGroup = AVAILABLE_VIDEOS.filter(
+          const videosWithGroup = availableVideos.filter(
             (video) => video.group === randomGroup,
           );
           videosWithGroup.reverse();
           programming.push(createMarathon(videosWithGroup, randomGroup));
           break;
         case "longVideo":
-          const longVideos = AVAILABLE_VIDEOS.filter(
+          const longVideos = availableVideos.filter(
             (video) => video.length >= LONG_VIDEO_TIME,
           );
           const weightedLongVideos = getWeightedVideoArray(longVideos, [
@@ -356,7 +392,7 @@ const createDailyProgramming = (
 
       largeItemProbabilityIndex++;
 
-      const filteredVideos = AVAILABLE_VIDEOS.filter(
+      const filteredVideos = availableVideos.filter(
         (video) => video.length < LONG_VIDEO_TIME,
       );
 
@@ -387,13 +423,19 @@ export const createSchedule = (
   const pastProgramming: ProgrammingItem[] = [];
 
   for (let i = 0; i < daysToCreate; i++) {
-    const programming = createDailyProgramming(random, pastProgramming);
+    const dayStartTime = SCHEDULE_START_TIME + i * 1000 * 60 * 60 * 24;
+
+    const availableVideos = getAvailableVideos(dayStartTime);
+
+    const programming = createDailyProgramming(
+      random,
+      availableVideos,
+      pastProgramming,
+    );
 
     const pastIdents = flattenSchedule(fullSchedule).filter(
       (item) => item.type === "ident",
     );
-
-    const dayStartTime = SCHEDULE_START_TIME + i * 1000 * 60 * 60 * 24;
 
     const schedule = convertProgrammingToSchedule(
       random,
