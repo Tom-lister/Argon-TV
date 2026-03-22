@@ -1382,12 +1382,30 @@ export const IDENTS: Ident[] = [
   {
     // Running Late
     type: "ident",
-    id: "K4Ctj5HzT04",
+    id: "tD4ncdt2chY",
     length: 19,
     promote: {
       id: "GWSD182sGcs",
       title: "Running Late",
       textAppear: 13.3,
     },
+  },
+  {
+    // Tom aura
+    type: "ident",
+    id: "WNtebo3lxcM",
+    length: 10,
+  },
+  {
+    // Jake aura
+    type: "ident",
+    id: "_tJGrN8aCFQ",
+    length: 13,
+  },
+  {
+    // Riley aura
+    type: "ident",
+    id: "JgILAw3Qb04",
+    length: 10,
   },
 ];
