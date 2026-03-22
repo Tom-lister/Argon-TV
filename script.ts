@@ -32,8 +32,6 @@ const firstVideoStartTime =
 
 displaySchedule(schedule, loadTime);
 
-console.log(flattenedSchedule.slice(currentVideoIndex - 6));
-
 /////////////////////////////// ADVERT ///////////////////////////////
 
 type AdvertData = {

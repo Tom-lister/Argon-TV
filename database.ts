@@ -270,6 +270,7 @@ export const VIDEOS: Video[] = [
     id: "wuWg4UVi4gI",
     title: "trying cigarettes for the first time",
     length: 135,
+    endTime: 110,
     genre: Genre.Video,
     tags: [Tag.Serbia, Tag.WeeklyYear],
     cast: [Cast.Jake],
@@ -644,7 +645,6 @@ export const VIDEOS: Video[] = [
     title: "Percy Manthey's The Unethicals",
     length: 2053,
     genre: Genre.Video,
-    group: Group.TheUnethicals,
     channel: Channel.ArgonFilms,
   },
   {
@@ -1367,5 +1367,27 @@ export const IDENTS: Ident[] = [
     id: "o3uyJN5MEGA",
     length: 20,
     avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+  },
+  {
+    // Heistwars
+    type: "ident",
+    id: "iZ3Q9yf0rno",
+    length: 15,
+    promote: {
+      id: "qcORfqlcjFY",
+      title: "Heistwars",
+      textAppear: 8.6,
+    },
+  },
+  {
+    // Running Late
+    type: "ident",
+    id: "K4Ctj5HzT04",
+    length: 19,
+    promote: {
+      id: "GWSD182sGcs",
+      title: "Running Late",
+      textAppear: 13.3,
+    },
   },
 ];
