@@ -1418,4 +1418,46 @@ export const IDENTS: Ident[] = [
     id: "JgILAw3Qb04",
     length: 10,
   },
+  {
+    // Jake characters
+    type: "ident",
+    id: "9qQP02clm7E",
+    length: 20,
+  },
+  {
+    // Jake announcement
+    type: "ident",
+    id: "Zp6_ast13zU",
+    length: 50,
+  },
+  {
+    // Frimp's
+    type: "ident",
+    id: "bOSwEjk8XBg",
+    length: 16,
+  },
+  {
+    // Nazis
+    type: "ident",
+    id: "fhx42Ocl8B4",
+    length: 17,
+  },
+  {
+    // Aleks aura
+    type: "ident",
+    id: "Dl39bkNLUBA",
+    length: 14,
+  },
+  {
+    // Who's watching
+    type: "ident",
+    id: "K3DPwrHigyI",
+    length: 28,
+  },
+  {
+    // Pimp
+    type: "ident",
+    id: "0hUSNcpsjm8",
+    length: 21,
+  },
 ];
