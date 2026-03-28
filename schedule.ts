@@ -1,9 +1,11 @@
+import { DateTime } from "luxon";
 import { XORShift } from "random-seedable";
 import {
   DAILY_RUNTIME,
   LARGE_ITEM_PROBABILITIES,
   LONG_VIDEO_TIME,
-  SCHEDULE_START_TIME,
+  SCHEDULE_ANCHOR,
+  UK_TIMEZONE,
   SEED,
 } from "./constants.js";
 import {
@@ -414,7 +416,9 @@ export const createSchedule = (
   loadTime: number,
 ): ScheduleItem[] => {
   const daysSinceScheduleStart = Math.ceil(
-    (loadTime - SCHEDULE_START_TIME) / (1000 * 60 * 60 * 24),
+    DateTime.fromMillis(loadTime, { zone: UK_TIMEZONE })
+      .diff(SCHEDULE_ANCHOR)
+      .as("days"),
   );
 
   const daysToCreate = daysSinceScheduleStart + 3;
@@ -423,7 +427,7 @@ export const createSchedule = (
   const pastProgramming: ProgrammingItem[] = [];
 
   for (let i = 0; i < daysToCreate; i++) {
-    const dayStartTime = SCHEDULE_START_TIME + i * 1000 * 60 * 60 * 24;
+    const dayStartTime = SCHEDULE_ANCHOR.plus({ days: i }).toMillis();
 
     const availableVideos = getAvailableVideos(dayStartTime);
 

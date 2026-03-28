@@ -271,16 +271,15 @@ function offAirVideo(): void {
 }
 
 function stillBroadcasting(): boolean {
-  const currentTime = new Date();
-  const currentHour = currentTime.getHours();
-  if (currentHour >= 0 && currentHour < 8) {
-    const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
-    const eightAmToday = getEightAmDate(currentTime).getTime();
+  const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
+  const eightAmToday = getEightAmDate(new Date()).getTime();
+  const eightAmTomorrow =
+    getEightAmDate(new Date()).getTime() + 1000 * 60 * 60 * 24;
 
-    if (nextVideoTime === eightAmToday) {
-      return false;
-    }
+  if (nextVideoTime === eightAmToday || nextVideoTime === eightAmTomorrow) {
+    return false;
   }
+
   return true;
 }
 

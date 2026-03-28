@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+import { UK_TIMEZONE } from "./constants.js";
 import { Video } from "./database";
 import {
   ProgrammingItem,
@@ -7,29 +9,23 @@ import {
 } from "./schedule";
 
 export const formatTime = (utcMs: number): string => {
-  const date = new Date(utcMs);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
+  return DateTime.fromMillis(utcMs, { zone: UK_TIMEZONE }).toFormat("HH:mm");
 };
 
 export const getEightAmDate = (date: Date, dayOffset: number = 0): Date => {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate() + dayOffset,
-    8,
-  );
+  return DateTime.fromMillis(date.getTime(), { zone: UK_TIMEZONE })
+    .plus({ days: dayOffset })
+    .set({ hour: 8, minute: 0, second: 0, millisecond: 0 })
+    .toJSDate();
 };
 
 export const isFirstForDay = (video: ScheduleVideo | ScheduleIdent) => {
-  const videoStartDate = new Date(video.startTime);
-  const videoStartHour = videoStartDate.getHours();
-  const videoStartMinute = videoStartDate.getMinutes();
-  const videoStartSecond = videoStartDate.getSeconds();
-
+  const dt = DateTime.fromMillis(video.startTime, { zone: UK_TIMEZONE });
   return (
-    videoStartHour === 8 && videoStartMinute === 0 && videoStartSecond === 0
+    dt.hour === 8 &&
+    dt.minute === 0 &&
+    dt.second === 0 &&
+    dt.millisecond === 0
   );
 };
 

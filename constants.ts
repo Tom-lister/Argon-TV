@@ -1,7 +1,23 @@
+import { DateTime } from "luxon";
+
 export const SEED = 123456778;
 
-// 8am, March 8th, 2026 (GMT)
-export const SCHEDULE_START_TIME = 1772956800000;
+/** All broadcast times and day boundaries use this IANA zone (GMT/BST). */
+export const UK_TIMEZONE = "Europe/London";
+
+/** First schedule day begins at 08:00 UK time on this calendar date. */
+export const SCHEDULE_ANCHOR = DateTime.fromObject(
+  {
+    year: 2026,
+    month: 3,
+    day: 8,
+    hour: 8,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  },
+  { zone: UK_TIMEZONE },
+);
 // 16 hours
 export const DAILY_RUNTIME = 1000 * 60 * 60 * 16;
 
