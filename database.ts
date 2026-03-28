@@ -1452,6 +1452,7 @@ export const IDENTS: Ident[] = [
     type: "ident",
     id: "fhx42Ocl8B4",
     length: 17,
+    avoid: ["itWurrJ-Klc"],
   },
   {
     // Aleks aura
@@ -1464,11 +1465,13 @@ export const IDENTS: Ident[] = [
     type: "ident",
     id: "K3DPwrHigyI",
     length: 28,
+    avoid: ["a_SY48Fca8E"],
   },
   {
     // Pimp
     type: "ident",
     id: "0hUSNcpsjm8",
     length: 21,
+    avoid: ["vnfX23-QX-8"],
   },
 ];
