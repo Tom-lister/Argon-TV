@@ -189,7 +189,7 @@ const getWeightedAttributeArray = <T>(
       (item) => item.attribute === attribute,
     );
     const attributeFrequency =
-      mostRecentIndex > 0 ? mostRecentIndex : reversedProgramming.length || 1;
+      mostRecentIndex >= 0 ? mostRecentIndex : reversedProgramming.length || 1;
     weightedAttributeArray.push(...Array(attributeFrequency).fill(attribute));
   }
 
