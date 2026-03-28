@@ -1,4 +1,4 @@
-export const SEED = 123456787;
+export const SEED = 123456778;
 
 // 8am, March 8th, 2026 (GMT)
 export const SCHEDULE_START_TIME = 1772956800000;
