@@ -35,6 +35,7 @@ export enum Tag {
   Documentary = "Documentary",
   WeeklyYear = "2022",
   Gaming = "Gaming",
+  Music = "Music Video",
 }
 
 export enum Cast {
@@ -58,6 +59,7 @@ export enum Channel {
   AleksanderMarkovic = "Aleksander Marković",
   PercyVader = "PercyVader",
   TomLister = "Tom Lister",
+  Nuch = "7000nuch",
 }
 
 export type Video = {
@@ -236,7 +238,7 @@ export const VIDEOS: Video[] = [
     title: "MadD G - Imagine",
     length: 213,
     genre: Genre.Video,
-    tags: [Tag.MadDG, Tag.WeeklyYear],
+    tags: [Tag.MadDG, Tag.WeeklyYear, Tag.Music],
     channel: Channel.ArgonFilms,
   },
   {
@@ -274,7 +276,7 @@ export const VIDEOS: Video[] = [
     title: "MadD G - triBute 2 LiZ (R.i.P Queen)",
     length: 156,
     genre: Genre.Video,
-    tags: [Tag.MadDG, Tag.WeeklyYear],
+    tags: [Tag.MadDG, Tag.WeeklyYear, Tag.Music],
     channel: Channel.ArgonFilms,
   },
   {
@@ -403,7 +405,7 @@ export const VIDEOS: Video[] = [
       "VNDERVVHELMER - Scary Movies (Victim of Involuntary Technological Interface)",
     length: 57,
     genre: Genre.Video,
-    tags: [Tag.PercyHouse, Tag.WeeklyYear],
+    tags: [Tag.PercyHouse, Tag.WeeklyYear, Tag.Music],
     channel: Channel.ArgonFilms,
   },
   {
@@ -567,7 +569,7 @@ export const VIDEOS: Video[] = [
     title: "STOP THE WAR - MadD G",
     length: 94,
     genre: Genre.Video,
-    tags: [Tag.MadDG, Tag.WeeklyYear],
+    tags: [Tag.MadDG, Tag.WeeklyYear, Tag.Music],
     channel: Channel.ArgonFilms,
   },
   {
@@ -1327,6 +1329,25 @@ export const VIDEOS: Video[] = [
     tags: [Tag.Gaming],
     channel: Channel.TomLister,
   },
+  {
+    type: "video",
+    id: "NMvIegVkSMw",
+    title: "Happy chemical",
+    length: 63,
+    genre: Genre.Video,
+    tags: [Tag.Music],
+    channel: Channel.Nuch,
+  },
+  {
+    type: "video",
+    id: "ps-FoU8Be44",
+    title: "Monster",
+    length: 84,
+    genre: Genre.Video,
+    tags: [Tag.Music],
+    cast: [Cast.Duja],
+    channel: Channel.Nuch,
+  },
 ];
 
 export type Ident = {
@@ -1514,5 +1535,41 @@ export const IDENTS: Ident[] = [
     id: "0hUSNcpsjm8",
     length: 21,
     avoid: ["vnfX23-QX-8"],
+  },
+  {
+    // Zipwharf
+    type: "ident",
+    id: "l25bhMMd99o",
+    length: 14,
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+    promote: {
+      id: "Iu-iUFD7AVM",
+      title: "ZIPWHARF",
+      textAppear: 9.79,
+    },
+  },
+  {
+    // Bye bye
+    type: "ident",
+    id: "bB7ks8scCuQ",
+    length: 7,
+  },
+  {
+    // Raining
+    type: "ident",
+    id: "UTaHczE6c6k",
+    length: 13,
+  },
+  {
+    // Garry's Mod
+    type: "ident",
+    id: "uoAG7iJw9Yk",
+    length: 12,
+  },
+  {
+    // Swinging
+    type: "ident",
+    id: "GnmHasIHwMM",
+    length: 15,
   },
 ];
