@@ -273,14 +273,25 @@ function offAirVideo(): void {
 function stillBroadcasting(): boolean {
   const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
   const eightAmToday = getEightAmDate(new Date()).getTime();
-  const eightAmTomorrow =
-    getEightAmDate(new Date()).getTime() + 1000 * 60 * 60 * 24;
+  const eightAmTomorrow = getEightAmDate(new Date(), 1).getTime();
 
   if (nextVideoTime === eightAmToday || nextVideoTime === eightAmTomorrow) {
     return false;
   }
 
   return true;
+}
+
+function handleVideoEnd(): void {
+  const wasOnAir = onAir;
+  // Check if we've stopped broadcasting for the day
+  onAir = stillBroadcasting();
+
+  if (onAir) {
+    nextVideo();
+  } else if (wasOnAir) {
+    offAirVideo();
+  } else player!.playVideo();
 }
 
 function initPlayer(): void {
@@ -310,16 +321,9 @@ function initPlayer(): void {
         event.target.setPlaybackQuality("hd1080");
       },
       onStateChange(event: YT.OnStateChangeEvent) {
+        console.log(event.data);
         if (event.data === YT.PlayerState.ENDED) {
-          const wasOnAir = onAir;
-          // Check if we've stopped broadcasting for the day
-          onAir = stillBroadcasting();
-
-          if (onAir) {
-            nextVideo();
-          } else if (wasOnAir) {
-            offAirVideo();
-          } else player!.playVideo();
+          handleVideoEnd();
         }
       },
     },
@@ -333,7 +337,7 @@ function initPlayer(): void {
 
     if ("endTime" in currentItem && currentItem.endTime) {
       const timeUntilEnd = (currentItem.endTime - videoProgress) * 1000;
-      setTimeout(nextVideo, timeUntilEnd);
+      setTimeout(handleVideoEnd, timeUntilEnd);
     }
   } else {
     const timeUntilNextVideo =

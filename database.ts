@@ -18,6 +18,7 @@ export enum Group {
   AntiSugarPSA = "Anti-Sugar PSA",
   TheLawSeries = "Law",
   InDepthDocumentaries = "In-Depth Documentaries",
+  TheTower = "The Tower",
 }
 
 // unordered collection
@@ -56,6 +57,7 @@ export enum Channel {
   JakeFilmFreak = "Jake Filmfreak",
   AleksanderMarkovic = "Aleksander Marković",
   PercyVader = "PercyVader",
+  TomLister = "Tom Lister",
 }
 
 export type Video = {
@@ -91,6 +93,14 @@ export const VIDEOS: Video[] = [
     length: 150,
     genre: Genre.Update,
     channel: Channel.ArgonFilms,
+  },
+  {
+    type: "video",
+    id: "Iu-iUFD7AVM",
+    title: "ZIPWHARF",
+    length: 5720,
+    genre: Genre.Video,
+    channel: Channel.PercyVader,
   },
   {
     type: "video",
@@ -1281,12 +1291,41 @@ export const VIDEOS: Video[] = [
   },
   {
     type: "video",
+    id: "fZJHbAoZAx0",
+    title: "The Artist",
+    length: 293,
+    genre: Genre.Video,
+    cast: [Cast.Jake],
+    channel: Channel.PercyVader,
+  },
+  {
+    type: "video",
+    id: "_dYKfuha6Hs",
+    title: "THE TOWER 2 - EXCLUSIVE MINECRAFT MAP PLAY THROUGH",
+    length: 1474,
+    genre: Genre.Video,
+    tags: [Tag.Gaming],
+    group: Group.TheTower,
+    channel: Channel.PercyVader,
+  },
+  {
+    type: "video",
     id: "d2hdOHSUeQQ",
     title: "The Tower - Cool New Minecraft Map!",
     length: 1476,
     genre: Genre.Video,
     tags: [Tag.Gaming],
+    group: Group.TheTower,
     channel: Channel.PercyVader,
+  },
+  {
+    type: "video",
+    id: "-Dwf7_2iq0Y",
+    title: "THE UNETHICALS | Minecraft Edition",
+    length: 2031,
+    genre: Genre.Video,
+    tags: [Tag.Gaming],
+    channel: Channel.TomLister,
   },
 ];
 
@@ -1310,7 +1349,7 @@ export const IDENTS: Ident[] = [
     type: "ident",
     id: "_2S_kGOtD5w",
     length: 10,
-    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4", "Iu-iUFD7AVM"],
   },
   {
     // Unethicals 2
@@ -1369,14 +1408,14 @@ export const IDENTS: Ident[] = [
     type: "ident",
     id: "QKNApSrNSHc",
     length: 9,
-    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4", "Iu-iUFD7AVM"],
   },
   {
     // Tweedles
     type: "ident",
     id: "o3uyJN5MEGA",
     length: 20,
-    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4"],
+    avoid: ["Kgubk4mFnZs", "MKwrxh6NEg4", "Iu-iUFD7AVM"],
   },
   {
     // Heistwars
@@ -1388,6 +1427,7 @@ export const IDENTS: Ident[] = [
       title: "Heistwars",
       textAppear: 8.6,
     },
+    avoid: ["6n0UVlYlQ1c"],
   },
   {
     // Running Late
@@ -1410,6 +1450,7 @@ export const IDENTS: Ident[] = [
       title: "THE UNETHICALS",
       textAppear: 14.25,
     },
+    avoid: ["hNYqeHSXAnQ"],
   },
   {
     // Tom aura
