@@ -2,12 +2,7 @@ import { XORShift } from "random-seedable";
 import { LONG_VIDEO_TIME, OFF_AIR_VIDEO_ID, SEED } from "./constants.js";
 import { Genre } from "./database.js";
 import { createSchedule, displaySchedule, ScheduleVideo } from "./schedule.js";
-import {
-  flattenSchedule,
-  formatTime,
-  getEightAmDate,
-  isFirstForDay,
-} from "./utils.js";
+import { flattenSchedule, formatTime, isFirstForDay } from "./utils.js";
 
 const random = new XORShift(SEED);
 
@@ -271,15 +266,9 @@ function offAirVideo(): void {
 }
 
 function stillBroadcasting(): boolean {
-  const nextVideoTime = flattenedSchedule[currentVideoIndex + 1].startTime;
-  const eightAmToday = getEightAmDate(new Date()).getTime();
-  const eightAmTomorrow = getEightAmDate(new Date(), 1).getTime();
+  const nextVideo = flattenedSchedule[currentVideoIndex + 1];
 
-  if (nextVideoTime === eightAmToday || nextVideoTime === eightAmTomorrow) {
-    return false;
-  }
-
-  return true;
+  return !isFirstForDay(nextVideo);
 }
 
 function handleVideoEnd(): void {
@@ -321,7 +310,6 @@ function initPlayer(): void {
         event.target.setPlaybackQuality("hd1080");
       },
       onStateChange(event: YT.OnStateChangeEvent) {
-        console.log(event.data);
         if (event.data === YT.PlayerState.ENDED) {
           handleVideoEnd();
         }
