@@ -1441,7 +1441,7 @@ export const IDENTS: Ident[] = [
   {
     // Heistwars
     type: "ident",
-    id: "kWcdCcmuFRc",
+    id: "ICSbW2FB2y4",
     length: 14,
     promote: {
       id: "qcORfqlcjFY",
@@ -1453,7 +1453,7 @@ export const IDENTS: Ident[] = [
   {
     // Running Late
     type: "ident",
-    id: "9XGzRBAShzA",
+    id: "TwNxBYrzGqo",
     length: 18,
     promote: {
       id: "GWSD182sGcs",
@@ -1464,7 +1464,7 @@ export const IDENTS: Ident[] = [
   {
     // Unethicals
     type: "ident",
-    id: "ygUi7Yv39pI",
+    id: "PyDs9hQ18TI",
     length: 19,
     promote: {
       id: "afBR-UHN4hk",
