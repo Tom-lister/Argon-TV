@@ -19,13 +19,13 @@ export const getEightAmDate = (date: Date, dayOffset: number = 0): Date => {
     .toJSDate();
 };
 
+export const getStartOfDay = (utcMs: number): number =>
+  DateTime.fromMillis(utcMs, { zone: UK_TIMEZONE }).startOf("day").toMillis();
+
 export const isFirstForDay = (video: ScheduleVideo | ScheduleIdent) => {
   const dt = DateTime.fromMillis(video.startTime, { zone: UK_TIMEZONE });
   return (
-    dt.hour === 8 &&
-    dt.minute === 0 &&
-    dt.second === 0 &&
-    dt.millisecond === 0
+    dt.hour === 8 && dt.minute === 0 && dt.second === 0 && dt.millisecond === 0
   );
 };
 

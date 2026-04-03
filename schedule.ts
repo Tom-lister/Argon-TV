@@ -22,6 +22,7 @@ import {
   flattenSchedule,
   formatTime,
   getEightAmDate,
+  getStartOfDay,
 } from "./utils.js";
 
 export type Marathon = {
@@ -50,38 +51,23 @@ export type ScheduleItem = ScheduleVideo | ScheduleMarathon | ScheduleIdent;
 /////////////////////////////// GENERATION ///////////////////////////////
 
 const getAvailableVideos = (dayStartTime: number): Video[] => {
-  const currentTime = new Date(dayStartTime);
-  const startOfDay = new Date(
-    currentTime.getFullYear(),
-    currentTime.getMonth(),
-    currentTime.getDate(),
-  );
+  const startOfDayMs = getStartOfDay(dayStartTime);
 
   return VIDEOS.filter((video) => video.genre !== Genre.Update)
     .filter(
-      (video) =>
-        !video.enterRotation || video.enterRotation <= startOfDay.getTime(),
+      (video) => !video.enterRotation || video.enterRotation <= startOfDayMs,
     )
     .filter(
-      (video) =>
-        !video.exitRotation || video.exitRotation > startOfDay.getTime(),
+      (video) => !video.exitRotation || video.exitRotation > startOfDayMs,
     );
 };
 
 const getAvailableIdents = (dayStartTime: number): Ident[] => {
-  const currentTime = new Date(dayStartTime);
-  const startOfDay = new Date(
-    currentTime.getFullYear(),
-    currentTime.getMonth(),
-    currentTime.getDate(),
-  );
+  const startOfDayMs = getStartOfDay(dayStartTime);
 
   return IDENTS.filter(
-    (ident) =>
-      !ident.enterRotation || ident.enterRotation <= startOfDay.getTime(),
-  ).filter(
-    (ident) => !ident.exitRotation || ident.exitRotation > startOfDay.getTime(),
-  );
+    (ident) => !ident.enterRotation || ident.enterRotation <= startOfDayMs,
+  ).filter((ident) => !ident.exitRotation || ident.exitRotation > startOfDayMs);
 };
 
 const getWeightedVideoArray = (
@@ -220,9 +206,13 @@ const createMarathon = (
 
 const estimateTotalProgrammingRuntime = (
   programming: ProgrammingItem[],
+  dayStartTime: number,
 ): number => {
+  const availableIdents = getAvailableIdents(dayStartTime);
   const averageIdentLength =
-    IDENTS.reduce((acc, ident) => acc + ident.length * 1000, 0) / IDENTS.length;
+    availableIdents.reduce((acc, ident) => acc + ident.length * 1000, 0) /
+    availableIdents.length;
+
   return programming.reduce((acc, item) => {
     if ("videos" in item) {
       return (
@@ -312,10 +302,13 @@ const createDailyProgramming = (
   random: XORShift,
   availableVideos: Video[],
   pastProgramming: ProgrammingItem[],
+  dayStartTime: number,
 ): ProgrammingItem[] => {
   const programming: ProgrammingItem[] = [];
   let largeItemProbabilityIndex = 0;
-  while (estimateTotalProgrammingRuntime(programming) < DAILY_RUNTIME) {
+  while (
+    estimateTotalProgrammingRuntime(programming, dayStartTime) < DAILY_RUNTIME
+  ) {
     const largeItem =
       random.float() < LARGE_ITEM_PROBABILITIES[largeItemProbabilityIndex];
 
@@ -434,6 +427,7 @@ export const createSchedule = (
       random,
       availableVideos,
       pastProgramming,
+      dayStartTime,
     );
 
     const pastIdents = flattenSchedule(fullSchedule).filter(

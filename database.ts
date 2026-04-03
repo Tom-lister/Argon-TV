@@ -80,6 +80,25 @@ export type Video = {
 export const VIDEOS: Video[] = [
   {
     type: "video",
+    id: "NG-ZU0nev6o",
+    title: "Why I Stopped Eating Food",
+    length: 300,
+    genre: Genre.Video,
+    channel: Channel.ArgonFilms,
+    enterRotation: 1775257200000,
+  },
+  {
+    type: "video",
+    id: "YDemZbFYdko",
+    title: "Uncle Funcle",
+    length: 308,
+    genre: Genre.Video,
+    cast: [Cast.Jake, Cast.Aleks],
+    channel: Channel.ArgonFilms,
+    enterRotation: 1775257200000,
+  },
+  {
+    type: "video",
     id: "NhzkgI2tUAg",
     title: "Bob & Mike's Last Ride",
     length: 416,
@@ -1571,5 +1590,33 @@ export const IDENTS: Ident[] = [
     type: "ident",
     id: "GnmHasIHwMM",
     length: 15,
+  },
+  {
+    // Funcle montage
+    type: "ident",
+    id: "3PBiu59aqQo",
+    length: 31,
+    enterRotation: 1775257200000,
+  },
+  {
+    // Funcle sausage
+    type: "ident",
+    id: "5YU862Httn8",
+    length: 26,
+    enterRotation: 1775257200000,
+  },
+  {
+    // Antipsychosis
+    type: "ident",
+    id: "EsYvgiVHW0U",
+    length: 22,
+    enterRotation: 1775257200000,
+  },
+  {
+    // Tweedledum burger
+    type: "ident",
+    id: "TB8RHkpMJXU",
+    length: 30,
+    enterRotation: 1775257200000,
   },
 ];
