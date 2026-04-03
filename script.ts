@@ -147,7 +147,7 @@ const showAdvert = ({ header, title, time }: AdvertData) => {
   banner.style.opacity = "1";
   banner.style.marginBottom = "2%";
   advertBody.style.flex = "10";
-  advertBody.style.paddingLeft = "24px";
+  advertBody.style.paddingLeft = "4%";
   advertBody.style.opacity = "1";
 
   setTimeout(hideAdvert, 6500);
