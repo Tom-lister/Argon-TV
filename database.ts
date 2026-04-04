@@ -1597,6 +1597,7 @@ export const IDENTS: Ident[] = [
     id: "3PBiu59aqQo",
     length: 31,
     enterRotation: 1775257200000,
+    avoid: ["YDemZbFYdko"],
   },
   {
     // Funcle sausage
@@ -1604,6 +1605,7 @@ export const IDENTS: Ident[] = [
     id: "5YU862Httn8",
     length: 26,
     enterRotation: 1775257200000,
+    avoid: ["YDemZbFYdko"],
   },
   {
     // Antipsychosis
