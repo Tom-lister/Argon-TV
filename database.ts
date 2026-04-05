@@ -1621,4 +1621,11 @@ export const IDENTS: Ident[] = [
     length: 30,
     enterRotation: 1775257200000,
   },
+  {
+    // Wonder Woman
+    type: "ident",
+    id: "j05wYx2IUG8",
+    length: 8,
+    enterRotation: 1775430000000,
+  },
 ];
