@@ -462,7 +462,9 @@ const displayDailySchedule = (schedule: ScheduleItem[], table: HTMLElement) => {
       row.appendChild(timeCell);
 
       const titleCell = document.createElement("td");
-      titleCell.textContent = item.title;
+      titleCell.innerHTML = item.tags?.includes(Tag.Music)
+        ? "<span style='color: #0bcc71;'>♪</span> " + item.title
+        : item.title;
       row.appendChild(titleCell);
 
       if (item.genre === Genre.Special || item.length >= LONG_VIDEO_TIME) {
@@ -493,7 +495,9 @@ const displayDailySchedule = (schedule: ScheduleItem[], table: HTMLElement) => {
         videoRow.appendChild(videoTimeCell);
 
         const videoTitleCell = document.createElement("td");
-        videoTitleCell.textContent = video.title;
+        videoTitleCell.innerHTML = video.tags?.includes(Tag.Music)
+          ? "<span style='color: #0bcc71;'>♪</span> " + video.title
+          : video.title;
         videoRow.appendChild(videoTitleCell);
 
         marathonTable.appendChild(videoRow);
