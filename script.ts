@@ -240,6 +240,11 @@ function nextVideo(): void {
   if (player) {
     player.loadVideoById(video.id, 0, "hd1080");
     player.unMute();
+
+    if (video.volume) {
+      player.setVolume(video.volume);
+    } else player.setVolume(50);
+
     updateVideoTitle();
     clearIdentText();
 
@@ -306,7 +311,7 @@ function initPlayer(): void {
     },
     events: {
       onReady(event: YT.PlayerEvent) {
-        event.target.setVolume(50);
+        event.target.setVolume(currentItem.volume ?? 50);
         event.target.setPlaybackQuality("hd1080");
       },
       onStateChange(event: YT.OnStateChangeEvent) {

@@ -60,6 +60,7 @@ export enum Channel {
   PercyVader = "PercyVader",
   TomLister = "Tom Lister",
   Nuch = "7000nuch",
+  Jack = "Jack Henry Greene",
 }
 
 export type Video = {
@@ -75,6 +76,7 @@ export type Video = {
   channel: Channel;
   enterRotation?: number; //midnight on first day of rotation
   exitRotation?: number; //midnight on first day of exclusion
+  volume?: number;
 };
 
 export const VIDEOS: Video[] = [
@@ -1367,6 +1369,26 @@ export const VIDEOS: Video[] = [
     cast: [Cast.Duja],
     channel: Channel.Nuch,
   },
+  {
+    type: "video",
+    id: "5ISkhg6r-k0",
+    title: "Finally Building Up The Courage To Call That Boy",
+    length: 167,
+    genre: Genre.Video,
+    channel: Channel.Jack,
+    enterRotation: 1776121200000,
+    volume: 100,
+  },
+  {
+    type: "video",
+    id: "ULykzLhJsu8",
+    title: "Every Overtly Sexual Chocolate Ad",
+    length: 100,
+    genre: Genre.Video,
+    channel: Channel.Jack,
+    enterRotation: 1776121200000,
+    volume: 100,
+  },
 ];
 
 export type Ident = {
@@ -1381,6 +1403,7 @@ export type Ident = {
   };
   enterRotation?: number; //midnight on first day of rotation
   exitRotation?: number; //midnight on first day of exclusion
+  volume?: number;
 };
 
 export const IDENTS: Ident[] = [
