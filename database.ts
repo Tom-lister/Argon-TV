@@ -1389,6 +1389,16 @@ export const VIDEOS: Video[] = [
     enterRotation: 1776121200000,
     volume: 100,
   },
+  {
+    type: "video",
+    id: "79QtsbDypSU",
+    title: "Narodna",
+    length: 211,
+    genre: Genre.Video,
+    channel: Channel.GyroFilms,
+    tags: [Tag.Music],
+    enterRotation: 1776466800000,
+  },
 ];
 
 export type Ident = {
@@ -1650,5 +1660,12 @@ export const IDENTS: Ident[] = [
     id: "j05wYx2IUG8",
     length: 8,
     enterRotation: 1775430000000,
+  },
+  {
+    // Three Rileys
+    type: "ident",
+    id: "AiebJtXFp6U",
+    length: 21,
+    enterRotation: 1776466800000,
   },
 ];
