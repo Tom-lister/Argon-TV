@@ -1399,6 +1399,42 @@ export const VIDEOS: Video[] = [
     tags: [Tag.Music],
     enterRotation: 1776466800000,
   },
+  {
+    type: "video",
+    id: "2s-1WGtDaEQ",
+    title: "Hair Tips",
+    length: 60,
+    genre: Genre.Video,
+    channel: Channel.PercyVader,
+    enterRotation: 1776639600000,
+  },
+  {
+    type: "video",
+    id: "d0rAjesa5AM",
+    title: "My Trip to Durham",
+    length: 59,
+    genre: Genre.Video,
+    channel: Channel.PercyVader,
+    enterRotation: 1776639600000,
+  },
+  {
+    type: "video",
+    id: "znOLgX0PqL8",
+    title: "Top 5 Sexiest Crossy Road Characters",
+    length: 59,
+    genre: Genre.Video,
+    channel: Channel.PercyVader,
+    enterRotation: 1776639600000,
+  },
+  {
+    type: "video",
+    id: "SNgsmejyMQE",
+    title: "Percy Manthey's Guide to the BRIT School",
+    length: 59,
+    genre: Genre.Video,
+    channel: Channel.PercyVader,
+    enterRotation: 1776639600000,
+  },
 ];
 
 export type Ident = {
