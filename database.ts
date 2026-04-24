@@ -1435,6 +1435,17 @@ export const VIDEOS: Video[] = [
     channel: Channel.PercyVader,
     enterRotation: 1776639600000,
   },
+  {
+    type: "video",
+    id: "Vj9t6PrqRuc",
+    title: "The Man Who Runs New York",
+    length: 476,
+    genre: Genre.Video,
+    channel: Channel.PercyVader,
+    cast: [Cast.Jake],
+    tags: [Tag.Documentary],
+    enterRotation: 1777071600000,
+  },
 ];
 
 export type Ident = {
