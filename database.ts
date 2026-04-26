@@ -1445,6 +1445,7 @@ export const VIDEOS: Video[] = [
     cast: [Cast.Jake],
     tags: [Tag.Documentary],
     enterRotation: 1777071600000,
+    exitRotation: 1777330800000,
   },
 ];
 
