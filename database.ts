@@ -1447,6 +1447,15 @@ export const VIDEOS: Video[] = [
     enterRotation: 1777071600000,
     exitRotation: 1777330800000,
   },
+  {
+    type: "video",
+    id: "b2dF7MYJFZM",
+    title: "PUCKLESS",
+    length: 213,
+    genre: Genre.Video,
+    channel: Channel.ArgonFilms,
+    enterRotation: 1778540400000,
+  }
 ];
 
 export type Ident = {
